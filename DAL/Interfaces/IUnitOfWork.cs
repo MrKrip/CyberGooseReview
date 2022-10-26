@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DAL.Entity;
 
 namespace DAL.Interfaces
 {
     public interface IUnitOfWork
     {
+        IRepository<Category> Categories { get; }
+        IRepository<Product> Products { get; }
+        IRepository<ProductSubCategoreis> ProductSubCategoreis { get; }
+        IRepository<Review> Reviews { get; }
+        IRepository<SubCategory> SubCategories { get; }
+        IUserRepository<User, UserData> Users { get; }
         void save();
     }
 }

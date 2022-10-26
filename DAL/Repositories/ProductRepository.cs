@@ -37,17 +37,17 @@ namespace DAL.Repositories
 
         public Product Get(int id)
         {
-            throw new NotImplementedException();
+            return db.Products.Find(id);
         }
 
         public IEnumerable<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return db.Products.Include(c => c.Category);
         }
 
         public void Update(Product item)
         {
-            throw new NotImplementedException();
+            db.Products.Update(item);
         }
     }
 }

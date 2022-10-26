@@ -9,10 +9,10 @@ namespace DAL.Interfaces
     public interface IUserRepository<T,S> where T : class where S : class
     {
         IEnumerable<S> GetAll();
-        S Get(int id);
+        S Get(string id);
         IEnumerable<S> Find(Func<T, bool> predicate);
         void Create(T item);
         void Update(T item);
-        void Delete(int id);
+        void Delete(string id);
     }
 }

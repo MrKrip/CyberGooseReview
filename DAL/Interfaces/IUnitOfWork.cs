@@ -9,6 +9,7 @@ namespace DAL.Interfaces
         IRepository<ProductSubCategoreis> ProductSubCategoreis { get; }
         IRepository<Review> Reviews { get; }
         IRepository<SubCategory> SubCategories { get; }
+        IRepository<UserLikes> UserLikes { get; }
         IUserRepository<User, UserData> Users { get; }
         void save();
     }

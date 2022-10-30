@@ -1,15 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DAL.Entity
+﻿namespace BLL.DTO
 {
-    public class Review
+    public class ReviewDTO
     {
-        [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public UserDTO User { get; set; }
         public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public ProductDTO Product { get; set; }
         public string ReviewDetails { get; set; }
         public int Rating { get; set; }
         public int Likes { get; set; }

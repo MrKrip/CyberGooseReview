@@ -14,6 +14,7 @@ namespace DAL.Repositories
         private ReviewRepository reviewRepository;
         private SubCategoryRepository subCategoryRepository;
         private UserRepository userRepository;
+        private UserLikesRepository userLikesRepository;
 
         public EFUnitOfWork(DbContextOptions<DefaultContext> options)
         {
@@ -77,6 +78,16 @@ namespace DAL.Repositories
                 if (userRepository == null)
                     userRepository = new UserRepository(db);
                 return userRepository;
+            }
+        }
+
+        public IRepository<UserLikes> UserLikes
+        {
+            get
+            {
+                if (userLikesRepository == null)
+                    userLikesRepository = new UserLikesRepository(db);
+                return userLikesRepository;
             }
         }
 

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CyberGooseReview", "CyberGooseReview\CyberGooseReview.csproj", "{189630F8-B937-4BE7-AE1B-29F23930885F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{D00042B7-F4AC-418C-9448-8CDBFF10118C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BL\BLL.csproj", "{D00042B7-F4AC-418C-9448-8CDBFF10118C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{F821FF1A-5FFE-481F-B213-73400C438F32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{F821FF1A-5FFE-481F-B213-73400C438F32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

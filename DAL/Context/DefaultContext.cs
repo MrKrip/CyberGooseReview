@@ -12,6 +12,7 @@ namespace DAL.Context
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<SubCategory> SubCategories { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<UserLikes> UserLikes { get; set; } = null!;
 
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {

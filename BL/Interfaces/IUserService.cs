@@ -6,7 +6,7 @@ namespace BLL.Interfaces
     {
         public void CreateUser(UserDTO user);
         public void UpdateUser(UserDTO user);
-        public UserDataDTO GetUserById(int id);
+        public UserDataDTO GetUserById(string id);
         public void DeleteUser(string id);
         public bool IsUserHasveRole(string role);
         public void LogIn(UserDTO user);

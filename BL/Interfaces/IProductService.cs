@@ -13,7 +13,6 @@ namespace BLL.Interfaces
         public IEnumerable<CategoryDTO> GetCategories();
         public IEnumerable<SubCategoryDTO> GetAllSubCatForCat(int categoryId);
         public IEnumerable<ProductDTO> GetAllProducts(int category);
-        public IEnumerable<ProductDTO> GetAllProducts(int categoryId, int pagination);
         public ProductDTO GetProduct(int id);
     }
 }

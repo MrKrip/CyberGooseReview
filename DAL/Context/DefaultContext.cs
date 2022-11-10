@@ -13,10 +13,17 @@ namespace DAL.Context
         public DbSet<SubCategory> SubCategories { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserLikes> UserLikes { get; set; } = null!;
+        private string connectionString;
 
-        public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
+        public DefaultContext(string connectionString)
         {
+            this.connectionString = connectionString;
             Database.EnsureCreated();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

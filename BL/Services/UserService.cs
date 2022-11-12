@@ -22,20 +22,20 @@ namespace BLL.Services
             DataBase.save();
         }
 
-        public void DeleteUser(string id)
+        public void DeleteUser(int id)
         {
             DataBase.Users.Delete(id);
             DataBase.save();
         }
 
-        public UserDataDTO GetUserById(string id)
+        public UserDataDTO GetUserById(int id)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserData, UserDataDTO>());
             var mapper = new Mapper(config);
             return mapper.Map<UserDataDTO>(DataBase.Users.Get(id));
         }
 
-        public bool IsUserHasveRole(string role)
+        public bool IsUserHasveRole(string role, int id)
         {
             throw new NotImplementedException();
         }

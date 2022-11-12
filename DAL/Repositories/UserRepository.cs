@@ -17,7 +17,7 @@ namespace DAL.Repositories
             db.Users.Add(item);
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             User user = db.Users.Find(id);
             if (user != null)
@@ -29,7 +29,7 @@ namespace DAL.Repositories
             return db.Users.Where(predicate).Select(u => new UserData { Id = u.Id, Name = u.UserName, RegistrationDate = u.RegistrationDate }).ToList();
         }
 
-        public UserData Get(string id)
+        public UserData Get(int id)
         {
             var u = db.Users.Find(id);
             return new UserData { Id = u.Id, Name = u.UserName, RegistrationDate = u.RegistrationDate };

@@ -6,7 +6,7 @@ namespace DAL.Interfaces
     {
         IRepository<Category> Categories { get; }
         IRepository<Product> Products { get; }
-        IRepository<ProductSubCategoreis> ProductSubCategoreis { get; }
+        //IRepository<ProductSubCategoreis> ProductSubCategoreis { get; }
         IRepository<Review> Reviews { get; }
         IRepository<SubCategory> SubCategories { get; }
         IRepository<UserLikes> UserLikes { get; }

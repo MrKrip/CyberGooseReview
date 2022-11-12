@@ -10,7 +10,7 @@ namespace DAL.Repositories
         private DefaultContext db;
         private CategoryRepository categoryRepository;
         private ProductRepository productRepository;
-        private ProductSubRepository productSubRepository;
+        //private ProductSubRepository productSubRepository;
         private ReviewRepository reviewRepository;
         private SubCategoryRepository subCategoryRepository;
         private UserRepository userRepository;
@@ -41,15 +41,15 @@ namespace DAL.Repositories
             }
         }
 
-        public IRepository<ProductSubCategoreis> ProductSubCategoreis
-        {
-            get
-            {
-                if (productSubRepository == null)
-                    productSubRepository = new ProductSubRepository(db);
-                return productSubRepository;
-            }
-        }
+        //public IRepository<ProductSubCategoreis> ProductSubCategoreis
+        //{
+        //    get
+        //    {
+        //        if (productSubRepository == null)
+        //            productSubRepository = new ProductSubRepository(db);
+        //        return productSubRepository;
+        //    }
+        //}
 
         public IRepository<Review> Reviews
         {

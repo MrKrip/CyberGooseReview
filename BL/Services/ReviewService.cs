@@ -28,7 +28,7 @@ namespace BLL.Services
             DataBase.save();
         }
 
-        public void DisLikeReview(int reviewId, string userId)
+        public void DisLikeReview(int reviewId, int userId)
         {
             throw new NotImplementedException();
         }
@@ -40,7 +40,7 @@ namespace BLL.Services
             return DataBase.Reviews.Find(r => r.ProductId == productId).Select(r => mapper.Map<ReviewDTO>(r));
         }
 
-        public IEnumerable<ReviewDTO> GetAllUserReview(string userId)
+        public IEnumerable<ReviewDTO> GetAllUserReview(int userId)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Review, ReviewDTO>());
             var mapper = new Mapper(config);
@@ -54,7 +54,7 @@ namespace BLL.Services
             return mapper.Map<ReviewDTO>(DataBase.Reviews.Get(id));
         }
 
-        public void LikeReview(int reviewId, string userId)
+        public void LikeReview(int reviewId, int userId)
         {
             throw new NotImplementedException();
         }

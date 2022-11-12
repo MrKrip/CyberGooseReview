@@ -28,7 +28,7 @@ namespace DAL.Repositories
 
         public IEnumerable<UserLikes> Find(Func<UserLikes, bool> predicate)
         {
-            return db.UserLikes.Include(r => r.Review).Include(u => u.User).Where(predicate);
+            return db.UserLikes.Include(u => u.User).Where(predicate);
         }
 
         public UserLikes Get(int id)
@@ -38,7 +38,7 @@ namespace DAL.Repositories
 
         public IEnumerable<UserLikes> GetAll()
         {
-            return db.UserLikes.Include(r => r.Review).Include(u => u.User);
+            return db.UserLikes.Include(u => u.User);
         }
 
         public void Update(UserLikes item)

@@ -12,5 +12,7 @@
         public int Likes { get; set; }
         public int DisLikes { get; set; }
         public DateTime CreationDate { get; set; }
+
+        public IEnumerable<UserLikesDTO> UserLikes { get; set; }
     }
 }

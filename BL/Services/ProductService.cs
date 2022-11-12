@@ -44,7 +44,7 @@ namespace BLL.Services
 
         public IEnumerable<ProductDTO> GetAllProducts(int category)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>());
+            var config = new MapperConfiguration(cfg => { cfg.CreateMap<Product, ProductDTO>(); cfg.CreateMap<SubCategory, SubCategoryDTO>(); });
             var mapper = new Mapper(config);
             return DataBase.Products.Find(c => c.CategoryId == category).Select(p => mapper.Map<ProductDTO>(p));
         }
@@ -65,7 +65,7 @@ namespace BLL.Services
 
         public ProductDTO GetProduct(int id)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>());
+            var config = new MapperConfiguration(cfg => { cfg.CreateMap<Product, ProductDTO>(); cfg.CreateMap<SubCategory, SubCategoryDTO>(); });
             var mapper = new Mapper(config);
             return mapper.Map<ProductDTO>(DataBase.Products.Get(id));
         }

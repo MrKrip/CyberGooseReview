@@ -8,14 +8,9 @@ namespace BLL.Util
     public static class ServicesModule
     {
 
-        public static void InitialSevicesDI(string ConnectionString, string[] args)
+        public static void InitialSevicesDI(string ConnectionString, IServiceCollection services)
         {
-            var builder = Host.CreateDefaultBuilder(args);
-            var services = new ServiceCollection();
             services.AddTransient<IUnitOfWork>(s => new EFUnitOfWork(ConnectionString));
-
-
-            services.BuildServiceProvider();
         }
     }
 }

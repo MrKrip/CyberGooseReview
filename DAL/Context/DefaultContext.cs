@@ -8,7 +8,7 @@ namespace DAL.Context
     {
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<ProductSubCategoreis> ProductSubCategoreis { get; set; } = null!;
+        //public DbSet<ProductSubCategoreis> ProductSubCategoreis { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<SubCategory> SubCategories { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
@@ -20,6 +20,7 @@ namespace DAL.Context
             this.connectionString = connectionString;
             Database.EnsureCreated();
         }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

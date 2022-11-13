@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entity
 {
@@ -6,11 +7,11 @@ namespace DAL.Entity
     {
         [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
-        public string ReviewDetails { get; set; }
+        public string ReviewDetails { get; set; } = null!;
         public int Rating { get; set; }
         public int Likes { get; set; }
         public int DisLikes { get; set; }

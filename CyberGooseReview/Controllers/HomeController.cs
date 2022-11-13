@@ -12,11 +12,12 @@ namespace CyberGooseReview.Controllers
         private IReviewService _reviewService;
         private IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger, IReviewService reviewService, IUserService userService)
+        public HomeController(ILogger<HomeController> logger, IReviewService reviewService, IUserService userService, IProductService productService)
         {
             _logger = logger;
             _reviewService = reviewService;
             _userService = userService;
+            _productService = productService;
         }
 
         public IActionResult Index()

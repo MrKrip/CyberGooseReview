@@ -4,14 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Context
 {
-    public class DefaultContext : IdentityDbContext
+    public class DefaultContext : IdentityDbContext<User>
     {
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
-        //public DbSet<ProductSubCategoreis> ProductSubCategoreis { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<SubCategory> SubCategories { get; set; } = null!;
-        public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserLikes> UserLikes { get; set; } = null!;
         private string connectionString;
 

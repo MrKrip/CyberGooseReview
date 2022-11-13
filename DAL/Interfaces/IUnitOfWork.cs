@@ -1,4 +1,5 @@
 ﻿using DAL.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Interfaces
 {
@@ -6,7 +7,6 @@ namespace DAL.Interfaces
     {
         IRepository<Category> Categories { get; }
         IRepository<Product> Products { get; }
-        //IRepository<ProductSubCategoreis> ProductSubCategoreis { get; }
         IRepository<Review> Reviews { get; }
         IRepository<SubCategory> SubCategories { get; }
         IRepository<UserLikes> UserLikes { get; }

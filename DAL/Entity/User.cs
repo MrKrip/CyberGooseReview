@@ -5,8 +5,7 @@ namespace DAL.Entity
 {
     public class User : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
-        public DateTime RegistrationDate { get; set; }
+        public string Salt { get; set; }
+        public DateTime? RegistationDate { get; set; }
     }
 }

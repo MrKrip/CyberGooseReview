@@ -1,12 +1,14 @@
 ﻿using DAL.Context;
 using DAL.Entity;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Repositories
 {
     public class UserRepository : IUserRepository<User, UserData>
     {
-        public DefaultContext db;
+        private DefaultContext db;
+
         public UserRepository(DefaultContext db)
         {
             this.db = db;
@@ -17,7 +19,7 @@ namespace DAL.Repositories
             db.Users.Add(item);
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             User user = db.Users.Find(id);
             if (user != null)
@@ -26,18 +28,18 @@ namespace DAL.Repositories
 
         public IEnumerable<UserData> Find(Func<User, bool> predicate)
         {
-            return db.Users.Where(predicate).Select(u => new UserData { Id = u.Id, Name = u.UserName, RegistrationDate = u.RegistrationDate }).ToList();
+            return db.Users.Where(predicate).Select(u => new UserData { Id = u.Id, Name = u.UserName }).ToList();
         }
 
-        public UserData Get(int id)
+        public UserData Get(string id)
         {
             var u = db.Users.Find(id);
-            return new UserData { Id = u.Id, Name = u.UserName, RegistrationDate = u.RegistrationDate };
+            return new UserData { Id = u.Id, Name = u.UserName };
         }
 
         public IEnumerable<UserData> GetAll()
         {
-            return db.Users.Select(u => new UserData { Id = u.Id, Name = u.UserName, RegistrationDate = u.RegistrationDate }).ToList();
+            return db.Users.Select(u => new UserData { Id = u.Id, Name = u.UserName }).ToList();
         }
 
         public void Update(User item)

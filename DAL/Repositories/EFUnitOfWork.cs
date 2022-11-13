@@ -1,7 +1,9 @@
 ﻿using DAL.Context;
 using DAL.Entity;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DAL.Repositories
 {
@@ -10,7 +12,6 @@ namespace DAL.Repositories
         private DefaultContext db;
         private CategoryRepository categoryRepository;
         private ProductRepository productRepository;
-        //private ProductSubRepository productSubRepository;
         private ReviewRepository reviewRepository;
         private SubCategoryRepository subCategoryRepository;
         private UserRepository userRepository;
@@ -18,7 +19,7 @@ namespace DAL.Repositories
 
         public EFUnitOfWork(string connectionStrng)
         {
-            db = new DefaultContext(connectionStrng);
+            db = new DefaultContext(connectionStrng);            
         }
 
         public IRepository<Category> Categories
@@ -40,16 +41,6 @@ namespace DAL.Repositories
                 return productRepository;
             }
         }
-
-        //public IRepository<ProductSubCategoreis> ProductSubCategoreis
-        //{
-        //    get
-        //    {
-        //        if (productSubRepository == null)
-        //            productSubRepository = new ProductSubRepository(db);
-        //        return productSubRepository;
-        //    }
-        //}
 
         public IRepository<Review> Reviews
         {

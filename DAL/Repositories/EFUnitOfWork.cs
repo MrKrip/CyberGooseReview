@@ -17,9 +17,9 @@ namespace DAL.Repositories
         private UserRepository userRepository;
         private UserLikesRepository userLikesRepository;
 
-        public EFUnitOfWork(string connectionStrng)
+        public EFUnitOfWork(DbContextOptions<DefaultContext> options)
         {
-            db = new DefaultContext(connectionStrng);            
+            db = new DefaultContext(options);
         }
 
         public IRepository<Category> Categories

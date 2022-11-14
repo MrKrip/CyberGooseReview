@@ -14,7 +14,11 @@ namespace BLL.Util
 
         public static void InitialSevicesDI(string ConnectionString, IServiceCollection services)
         {
-            services.AddTransient<IUnitOfWork>(s => new EFUnitOfWork(ConnectionString));
+            services.AddDbContext<DefaultContext>(options => options.UseSqlServer(ConnectionString));
+
+            var optionsBuilder = new DbContextOptionsBuilder<DefaultContext>();
+
+            services.AddTransient<IUnitOfWork>(s => new EFUnitOfWork(optionsBuilder.UseSqlServer(ConnectionString).Options));
 
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                         .AddEntityFrameworkStores<DefaultContext>();

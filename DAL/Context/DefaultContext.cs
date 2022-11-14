@@ -13,16 +13,10 @@ namespace DAL.Context
         public DbSet<UserLikes> UserLikes { get; set; } = null!;
         private string connectionString;
 
-        public DefaultContext(string connectionString)
+        public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
-            this.connectionString = connectionString;
             Database.EnsureCreated();
         }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(connectionString);
-        }
     }
 }

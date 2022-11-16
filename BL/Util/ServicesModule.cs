@@ -20,7 +20,11 @@ namespace BLL.Util
 
             services.AddTransient<IUnitOfWork>(s => new EFUnitOfWork(optionsBuilder.UseSqlServer(ConnectionString).Options));
 
-            services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.User.RequireUniqueEmail = true;
+            })
                         .AddEntityFrameworkStores<DefaultContext>();
         }
     }

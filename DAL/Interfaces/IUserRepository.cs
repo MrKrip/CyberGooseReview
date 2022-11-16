@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Interfaces
 {
@@ -11,8 +7,9 @@ namespace DAL.Interfaces
         IEnumerable<S> GetAll();
         S Get(string id);
         IEnumerable<S> Find(Func<T, bool> predicate);
-        void Create(T item);
+        Task<IdentityResult> Create(T item, UserManager<T> userManager);
         void Update(T item);
         void Delete(string id);
+        Task<SignInResult> LogIn(T item, SignInManager<T> signInManager);
     }
 }

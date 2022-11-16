@@ -14,9 +14,9 @@ namespace DAL.Repositories
             this.db = db;
         }
 
-        public void Create(User item)
+        public async Task<IdentityResult> Create(User item, UserManager<User> userManager)
         {
-            db.Users.Add(item);
+            return await userManager.CreateAsync(item);
         }
 
         public void Delete(string id)
@@ -28,7 +28,16 @@ namespace DAL.Repositories
 
         public IEnumerable<UserData> Find(Func<User, bool> predicate)
         {
-            return db.Users.Where(predicate).Select(u => new UserData { Id = u.Id, Name = u.UserName }).ToList();
+            return db.Users.Where(predicate).Select(u => new UserData
+            {
+                Id = u.Id,
+                Name = u.UserName,
+                Email = u.Email,
+                ProfilePicture = u.ProfilePicture,
+                RegistationDate = u.RegistationDate,
+                Salt = u.Salt,
+                Tag = u.Tag
+            }).ToList();
         }
 
         public UserData Get(string id)
@@ -39,7 +48,21 @@ namespace DAL.Repositories
 
         public IEnumerable<UserData> GetAll()
         {
-            return db.Users.Select(u => new UserData { Id = u.Id, Name = u.UserName }).ToList();
+            return db.Users.Select(u => new UserData
+            {
+                Id = u.Id,
+                Name = u.UserName,
+                Email = u.Email,
+                ProfilePicture = u.ProfilePicture,
+                RegistationDate = u.RegistationDate,
+                Salt = u.Salt,
+                Tag = u.Tag
+            }).ToList();
+        }
+
+        public async Task<SignInResult> LogIn(User item, SignInManager<User> signInManager)
+        {
+            return await signInManager.PasswordSignInAsync(item, item.PasswordHash, false, false);
         }
 
         public void Update(User item)

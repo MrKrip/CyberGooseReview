@@ -2,7 +2,7 @@
 
 namespace DAL.Interfaces
 {
-    public interface IUserRepository<T,S> where T : class where S : class
+    public interface IUserRepository<T, S> where T : class where S : class
     {
         IEnumerable<S> GetAll();
         S Get(string id);
@@ -10,6 +10,6 @@ namespace DAL.Interfaces
         Task<IdentityResult> Create(T item, UserManager<T> userManager);
         void Update(T item);
         void Delete(string id);
-        Task<SignInResult> LogIn(T item, SignInManager<T> signInManager);
+        Task LogIn(T item, SignInManager<T> signInManager);
     }
 }

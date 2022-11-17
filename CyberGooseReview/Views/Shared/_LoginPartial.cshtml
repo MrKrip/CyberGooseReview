@@ -1,0 +1,32 @@
+﻿@using BLL.Interfaces
+@using Microsoft.AspNetCore.Identity
+@inject IUserService userService
+
+
+<form class="col-12 col-lg-auto mb-3 md-lg-0 me-lg-3" method="get" asp-area="" asp-controller="Product" asp-action="Search">
+    <input name="ProductName" type="search" class="form-control" placeholder="Search..." aria-label="Search" />
+</form>
+@if (userService.IsSignedIn(User))
+{
+
+    <div class="dropdown">
+        <a class="d-block link-dark text-decoration-none dropdown-toggle show" asp-area="" asp-controller="User" asp-action="Manage" data-bs-toggle="dropdown" aria-expanded="true">
+            <img src="data:image/*;base64,@(Convert.ToBase64String(userService.GetCurrentUser(User).ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu text-small show">
+            <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Manage">Manage</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout">Logout</a></li>
+        </ul>
+    </div>
+
+}
+else
+{
+
+    <a type="button" class="btn btn-primary" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+
+    <a type="button" class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+
+}
+

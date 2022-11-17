@@ -3,7 +3,6 @@ using DAL.Entity;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,8 +23,8 @@ namespace BLL.Util
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
-            })
-                        .AddEntityFrameworkStores<DefaultContext>();
+            }).AddEntityFrameworkStores<DefaultContext>();
         }
+
     }
 }

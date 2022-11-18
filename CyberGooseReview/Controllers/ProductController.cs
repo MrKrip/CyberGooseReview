@@ -18,10 +18,6 @@ namespace CyberGooseReview.Controllers
             _productService = productService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         public IActionResult Search(string ProductName)
         {

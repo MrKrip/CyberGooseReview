@@ -16,13 +16,15 @@ namespace BLL.Services
         private IUnitOfWork DataBase;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
-        public UserService(IUnitOfWork db, UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config)
+        public UserService(IUnitOfWork db, UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, RoleManager<IdentityRole> roleManager)
         {
             DataBase = db;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
+            _roleManager = roleManager;
         }
 
         public async Task<IdentityResult> CreateUser(UserDTO user)
@@ -57,11 +59,14 @@ namespace BLL.Services
             return mapper.Map<UserDataDTO>(DataBase.Users.Get(id));
         }
 
-        public async Task<bool> IsUserHasveRole(string role, string id)
+        public async Task<bool> IsUserHasveRole(string id, string role)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDataDTO, User>());
-            var mapper = new Mapper(config);
-            return await _userManager.IsInRoleAsync(mapper.Map<User>(GetUserById(id)), role);
+            return await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(id), role);
+        }
+
+        public async Task<bool> IsCurrentUserHasRole(ClaimsPrincipal user, string role)
+        {
+            return await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), role);
         }
 
         public async Task<bool> LogIn(UserDTO user)
@@ -102,6 +107,56 @@ namespace BLL.Services
             var config = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>());
             var mapper = new Mapper(config);
             return mapper.Map<UserDTO>(_userManager.GetUserAsync(user).Result);
+        }
+
+        public async Task<IdentityResult> CreateNewRole(string role)
+        {
+
+            return await DataBase.Users.CreateNewRole(role, _roleManager);
+        }
+
+        public async Task<IdentityResult> AddRolesToUser(string id, IEnumerable<string> roles)
+        {
+            return await DataBase.Users.AddRolesToUser(id, roles, _userManager, _roleManager);
+        }
+
+        public async Task<IdentityResult> AddRoleToUser(string id, string roles)
+        {
+            return await DataBase.Users.AddRoleToUser(id, roles, _userManager);
+        }
+
+        public IEnumerable<IdentityRole> GetAllRoles()
+        {
+            return DataBase.Users.GetAllRoles(_roleManager);
+        }
+
+        public IEnumerable<IdentityRole> FindRole(Func<IdentityRole, bool> predicate)
+        {
+            return DataBase.Users.FindRole(predicate, _roleManager);
+        }
+
+        public async Task<IdentityResult> DeleteRole(string id)
+        {
+            return await DataBase.Users.DeleteRole(id, _roleManager);
+        }
+
+        public IEnumerable<UserDataDTO> GetUsers()
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserData, UserDataDTO>());
+            var mapper = new Mapper(config);
+            return DataBase.Users.GetAll().Select(ud => mapper.Map<UserDataDTO>(ud));
+        }
+
+        public IEnumerable<UserDataDTO> FindUsers(Func<User, bool> predicate)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserData, UserDataDTO>());
+            var mapper = new Mapper(config);
+            return DataBase.Users.Find(predicate).Select(ud => mapper.Map<UserDataDTO>(ud));
+        }
+
+        public async Task<IEnumerable<string>> GetUserRoles(string id)
+        {
+            return await DataBase.Users.GetUserRoles(id, _userManager);
         }
     }
 }

@@ -10,11 +10,16 @@
 {
 
     <div class="dropdown">
-        <a class="d-block link-dark text-decoration-none dropdown-toggle show" asp-area="" asp-controller="User" asp-action="Manage" data-bs-toggle="dropdown" aria-expanded="true">
+        <a class="d-block link-dark text-decoration-none dropdown-toggle" asp-area="" asp-controller="User" asp-action="Manage" data-bs-toggle="dropdown" aria-expanded="true">
             <img src="data:image/*;base64,@(Convert.ToBase64String(userService.GetCurrentUser(User).ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
         </a>
-        <ul class="dropdown-menu text-small show">
+        <ul class="dropdown-menu text-small">
             <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Manage">Manage</a></li>
+            @if (userService.IsCurrentUserHasRole(User, "Admin").Result)
+            {
+                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Roles">Manage roles</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="UserRoles">Manage user roles</a></li>
+            }
             <li><hr class="dropdown-divider" /></li>
             <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout">Logout</a></li>
         </ul>

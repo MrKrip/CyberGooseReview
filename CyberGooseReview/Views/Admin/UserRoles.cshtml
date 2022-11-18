@@ -1,0 +1,48 @@
+﻿@model IEnumerable<UserRolesModel>
+
+<h1 class="display-4">Role Manager</h1>
+
+<form method="get" asp-area="" asp-controller="Admin" asp-action="UserRoles">
+    <div class="input-group">
+        <input name="userName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Find user</button>
+        </span>
+    </div>
+</form>
+<br />
+<a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="UserRoles">Reset Search</a>
+<br />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Registration date</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-sm">
+                            <a asp-area="" asp-controller="User" asp-action="UserData" asp-route-id="@user.Id">@user.UserNick</a>
+                            <br />
+                            <small>
+                                @user.Id
+                            </small>
+                        </div>
+                    </div>
+                </td>
+                <td>@user.Email</td>
+                <td>@user.RegistationDate.ToString()</td>
+                <td>@string.Join(" , ",user.Roles.ToList())</td>
+                <td><a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="ManageRoles" asp-route-id="@user.Id">Manage roles</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

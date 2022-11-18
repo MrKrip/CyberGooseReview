@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RoleModel>
+
+<h1 class="display-4">Role Manager</h1>
+
+<form method="get" asp-area="" asp-controller="Admin" asp-action="Roles">
+    <div class="input-group">
+        <input name="roleName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Find role</button>
+        </span>
+    </div>
+</form>
+<br />
+<form method="post" asp-area="" asp-controller="Admin" asp-action="NewRole">
+    <div class="input-group">
+        <input name="roleName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Add New Role</button>
+        </span>
+    </div>
+</form>
+<br />
+<a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="Roles">Reset Search</a>
+<br />
+<div class="form-outline mb-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Role</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.Name</td>
+                <td><a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="DeleteRole" asp-route-id="@role.Id">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

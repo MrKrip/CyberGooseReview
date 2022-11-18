@@ -1,8 +1,14 @@
-﻿using BLL.Interfaces;
+﻿using AutoMapper;
+using BLL.DTO;
+using BLL.Interfaces;
+using CyberGooseReview.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CyberGooseReview.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,9 +24,117 @@ namespace CyberGooseReview.Controllers
             _productService = productService;
         }
 
-        public IActionResult Index()
+
+        [HttpGet]
+        public IActionResult Roles(string? roleName)
         {
-            return View();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<IdentityRole, RoleModel>());
+            var mapper = new Mapper(config);
+            if (roleName == null)
+            {
+                return View(_userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r)));
+            }
+            else
+            {
+                var roles = _userService.FindRole(r => r.Name.ToLower().Contains(roleName.ToLower())).Select(r => mapper.Map<RoleModel>(r));
+                if (roles.Any())
+                {
+                    return View(roles);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, $"Role \"{roleName}\" does not exist");
+                    return View(_userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r)));
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NewRole(string roleName)
+        {
+            var result = await _userService.CreateNewRole(roleName);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (!error.Description.Contains("Username"))
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return RedirectToAction("Roles");
+        }
+
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var result = await _userService.DeleteRole(id);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (!error.Description.Contains("Username"))
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return RedirectToAction("Roles");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserRoles(string? userName)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDataDTO, UserRolesModel>());
+            var mapper = new Mapper(config);
+            List<UserRolesModel> Users = new List<UserRolesModel>();
+            if (userName == null)
+            {
+                Users = _userService.GetUsers().Select(u => mapper.Map<UserRolesModel>(u)).ToList();
+            }
+            else
+            {
+                Users = _userService.FindUsers(u => u.UserNick.ToLower().Contains(userName.ToLower()) || u.Email.ToLower().Contains(userName.ToLower()))
+                    .Select(u => mapper.Map<UserRolesModel>(u)).ToList();
+            }
+            for (int i = 0; i < Users.Count; i++)
+            {
+                Users[i].Roles = (await _userService.GetUserRoles(Users[i].Id)).ToList();
+            }
+            return View(Users);
+        }
+
+        public async Task<IActionResult> ManageRoles(string id)
+        {
+            ViewBag.Id = id;
+            ViewBag.UserName = _userService.GetUserById(id).UserNick;
+            var roles = _userService.GetAllRoles();
+            var model = new List<ManageUserRolesModel>();
+            foreach (var role in roles)
+            {
+                var userRolesViewModel = new ManageUserRolesModel
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name
+                };
+                if (await _userService.IsUserHasveRole(id, role.Name))
+                {
+                    userRolesViewModel.Selected = true;
+                }
+                else
+                {
+                    userRolesViewModel.Selected = false;
+                }
+                model.Add(userRolesViewModel);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageRoles(List<ManageUserRolesModel> model, string id)
+        {
+            var result = await _userService.AddRolesToUser(id, model.Select(r => r.RoleName));
+            return RedirectToAction("UserRoles");
         }
     }
 }

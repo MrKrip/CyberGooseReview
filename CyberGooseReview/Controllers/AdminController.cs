@@ -15,6 +15,7 @@ namespace CyberGooseReview.Controllers
         private IProductService _productService;
         private IReviewService _reviewService;
         private IUserService _userService;
+        private int pageSize = 10;
 
         public AdminController(ILogger<HomeController> logger, IReviewService reviewService, IUserService userService, IProductService productService)
         {
@@ -26,25 +27,40 @@ namespace CyberGooseReview.Controllers
 
 
         [HttpGet]
-        public IActionResult Roles(string? roleName)
+        public IActionResult Roles(string? roleName, int page = 1)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<IdentityRole, RoleModel>());
             var mapper = new Mapper(config);
             if (roleName == null)
             {
-                return View(_userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r)));
+                var roles = _userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r));
+                var count = roles.Count();
+                roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
+                PageModel pageModel = new PageModel(count, page, pageSize);
+                ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                return View(model);
             }
             else
             {
                 var roles = _userService.FindRole(r => r.Name.ToLower().Contains(roleName.ToLower())).Select(r => mapper.Map<RoleModel>(r));
                 if (roles.Any())
                 {
-                    return View(roles);
+                    ViewBag.roleName = roleName;
+                    var count = roles.Count();
+                    roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
+                    PageModel pageModel = new PageModel(count, page, pageSize);
+                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                    return View(model);
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, $"Role \"{roleName}\" does not exist");
-                    return View(_userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r)));
+                    roles = _userService.GetAllRoles().Select(r => mapper.Map<RoleModel>(r));
+                    var count = roles.Count();
+                    roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
+                    PageModel pageModel = new PageModel(count, page, pageSize);
+                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                    return View(model);
                 }
             }
         }
@@ -83,7 +99,7 @@ namespace CyberGooseReview.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserRoles(string? userName)
+        public async Task<IActionResult> UserRoles(string? userName, int page = 1)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDataDTO, UserRolesModel>());
             var mapper = new Mapper(config);
@@ -94,14 +110,19 @@ namespace CyberGooseReview.Controllers
             }
             else
             {
+                ViewBag.userName = userName;
                 Users = _userService.FindUsers(u => u.UserNick.ToLower().Contains(userName.ToLower()) || u.Email.ToLower().Contains(userName.ToLower()))
                     .Select(u => mapper.Map<UserRolesModel>(u)).ToList();
             }
+            var count = Users.Count();
+            Users = Users.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             for (int i = 0; i < Users.Count; i++)
             {
                 Users[i].Roles = (await _userService.GetUserRoles(Users[i].Id)).ToList();
             }
-            return View(Users);
+            PageModel pageModel = new PageModel(count, page, pageSize);
+            ItemsPageModel<UserRolesModel> itemsPageModel = new ItemsPageModel<UserRolesModel>(Users, pageModel);
+            return View(itemsPageModel);
         }
 
         public async Task<IActionResult> ManageRoles(string id)

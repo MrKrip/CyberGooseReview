@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserRolesModel>
+﻿@model ItemsPageModel<UserRolesModel>
 
 <h1 class="display-4">Role Manager</h1>
 
@@ -24,13 +24,13 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model)
+        @foreach (var user in Model.Items)
         {
             <tr>
                 <td>
                     <div class="row">
                         <div class="col-sm">
-                            <a asp-area="" asp-controller="User" asp-action="UserData" asp-route-id="@user.Id">@user.UserNick</a>
+                            <a class="text-decoration-none" asp-area="" asp-controller="User" asp-action="UserData" asp-route-id="@user.Id">@user.UserNick</a>
                             <br />
                             <small>
                                 @user.Id
@@ -46,3 +46,14 @@
         }
     </tbody>
 </table>
+
+<p>
+    @if(Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="UserRoles" asp-route-page="@(Model.PageModel.PageNumber-1)" asp-route-userName="@ViewBag.userName">Previous Page</a>
+    }
+    @if(Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="UserRoles" asp-route-page="@(Model.PageModel.PageNumber+1)" asp-route-userName="@ViewBag.userName">Next Page</a>
+    }
+</p>

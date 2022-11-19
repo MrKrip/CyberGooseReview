@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RoleModel>
+﻿@model ItemsPageModel<RoleModel>
 
 <h1 class="display-4">Role Manager</h1>
 
@@ -34,7 +34,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var role in Model)
+        @foreach (var role in Model.Items)
         {
             <tr>
                 <td>@role.Id</td>
@@ -44,3 +44,14 @@
         }
     </tbody>
 </table>
+
+<p>
+    @if(Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="Roles" asp-route-page="@(Model.PageModel.PageNumber-1)" asp-route-userName="@ViewBag.roleName">Previous Page</a>
+    }
+    @if(Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="Roles" asp-route-page="@(Model.PageModel.PageNumber+1)" asp-route-userName="@ViewBag.roleName">Next Page</a>
+    }
+</p>

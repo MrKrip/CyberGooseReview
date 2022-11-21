@@ -40,8 +40,9 @@ namespace BLL.Services
             user.RegistationDate = DateTime.Now;
             user.Id = Activator.CreateInstance<User>().Id;
             user.UserName = user.Email;
+            user.ProfilePicture = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\wwwroot\img\Goose.jpg");
             var newUser = mapper.Map<User>(user);
-            var result = await DataBase.Users.Create(mapper.Map<User>(user), _userManager);
+            var result = await DataBase.Users.Create(newUser, _userManager);
             DataBase.save();
             return result;
         }

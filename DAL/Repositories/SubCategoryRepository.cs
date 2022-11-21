@@ -27,7 +27,7 @@ namespace DAL.Repositories
 
         public IEnumerable<SubCategory> Find(Func<SubCategory, bool> predicate)
         {
-            return db.SubCategories.Include(c => c.Category).Where(predicate).ToList();
+            return db.SubCategories.Where(predicate).ToList();
         }
 
         public SubCategory Get(int id)
@@ -37,7 +37,7 @@ namespace DAL.Repositories
 
         public IEnumerable<SubCategory> GetAll()
         {
-            return db.SubCategories.Include(c => c.Category);
+            return db.SubCategories;
         }
 
         public void Update(SubCategory item)

@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Areas\" />
     <Folder Include="Components\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
   <ItemGroup>

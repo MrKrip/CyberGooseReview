@@ -16,6 +16,9 @@ namespace DAL.Repositories
         private SubCategoryRepository subCategoryRepository;
         private UserRepository userRepository;
         private UserLikesRepository userLikesRepository;
+        private CatSubCategoryRepository catSubCategoryRepository;
+        private ProductSubCategoriesRepository productSubCategoriesRepository;
+        private CategoryRolesRepository categoryRolesRepository;
 
         public EFUnitOfWork(DbContextOptions<DefaultContext> options)
         {
@@ -79,6 +82,36 @@ namespace DAL.Repositories
                 if (userLikesRepository == null)
                     userLikesRepository = new UserLikesRepository(db);
                 return userLikesRepository;
+            }
+        }
+
+        public IRepository<CategoriesSubCategories> CategoriesSubCategories
+        {
+            get
+            {
+                if (catSubCategoryRepository == null)
+                    catSubCategoryRepository = new CatSubCategoryRepository(db);
+                return catSubCategoryRepository;
+            }
+        }
+
+        public IRepository<ProductSubCategories> ProductSubCategories
+        {
+            get
+            {
+                if (productSubCategoriesRepository == null)
+                    productSubCategoriesRepository = new ProductSubCategoriesRepository(db);
+                return productSubCategoriesRepository;
+            }
+        }
+
+        public IRepository<CategoryRoles> CategoryRoles
+        {
+            get
+            {
+                if (categoryRolesRepository == null)
+                    categoryRolesRepository = new CategoryRolesRepository(db);
+                return categoryRolesRepository;
             }
         }
 

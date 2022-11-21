@@ -53,7 +53,7 @@ namespace BLL.Services
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<SubCategory, SubCategoryDTO>());
             var mapper = new Mapper(config);
-            return DataBase.SubCategories.Find(sc => sc.CategoryId == categoryId).Select(sc => mapper.Map<SubCategoryDTO>(sc));
+            return DataBase.SubCategories.Find(sc => DataBase.CategoriesSubCategories.Find(c => c.CategoryId == categoryId).Any(c => c.SubCategoryId == sc.Id)).Select(sc => mapper.Map<SubCategoryDTO>(sc));
         }
 
         public IEnumerable<CategoryDTO> GetCategories()

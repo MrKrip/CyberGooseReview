@@ -43,11 +43,9 @@ namespace DAL.Repositories
             return await roleManager.CreateAsync(newRole);
         }
 
-        public void Delete(string id)
+        public async Task<IdentityResult> Delete(User item, UserManager<User> userManager)
         {
-            User user = db.Users.Find(id);
-            if (user != null)
-                db.Users.Remove(user);
+            return await userManager.DeleteAsync(item);
         }
 
         public async Task<IdentityResult> DeleteRole(string id, RoleManager<IdentityRole> roleManager)
@@ -112,9 +110,9 @@ namespace DAL.Repositories
             await signInManager.SignInAsync(item, false);
         }
 
-        public void Update(User item)
+        public async Task<IdentityResult> Update(User item, UserManager<User> userManager)
         {
-            db.Users.Update(item);
+            return await userManager.UpdateAsync(item);
         }
     }
 }

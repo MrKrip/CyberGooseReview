@@ -16,15 +16,23 @@ namespace BLL.Services
 
         public void CreateCategory(CategoryDTO category)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CategoryDTO, Category>());
             var mapper = new Mapper(config);
             DataBase.Categories.Create(mapper.Map<Category>(category));
             DataBase.save();
         }
 
+        public void CreateProduct(ProductDTO product)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
+            var mapper = new Mapper(config);
+            DataBase.Products.Create(mapper.Map<Product>(product));
+            DataBase.save();
+        }
+
         public void CreateSubCategory(SubCategoryDTO subCategory)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<SubCategory, SubCategoryDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<SubCategoryDTO, SubCategory>());
             var mapper = new Mapper(config);
             DataBase.SubCategories.Create(mapper.Map<SubCategory>(subCategory));
             DataBase.save();
@@ -36,10 +44,23 @@ namespace BLL.Services
             DataBase.save();
         }
 
+        public void DeleteProduct(int id)
+        {
+            DataBase.Products.Delete(id);
+            DataBase.save();
+        }
+
         public void DeleteSubCategory(int id)
         {
             DataBase.SubCategories.Delete(id);
             DataBase.save();
+        }
+
+        public IEnumerable<ProductDTO> FindProducts(Func<Product, bool> predicate)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>());
+            var mapper = new Mapper(config);
+            return DataBase.Products.Find(predicate).Select(p => mapper.Map<ProductDTO>(p));
         }
 
         public IEnumerable<ProductDTO> GetAllProducts(int category)
@@ -72,15 +93,23 @@ namespace BLL.Services
 
         public void UpdateCategory(CategoryDTO category)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CategoryDTO, Category>());
             var mapper = new Mapper(config);
             DataBase.Categories.Update(mapper.Map<Category>(category));
             DataBase.save();
         }
 
+        public void UpdateProduct(ProductDTO product)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
+            var mapper = new Mapper(config);
+            DataBase.Products.Update(mapper.Map<Product>(product));
+            DataBase.save();
+        }
+
         public void UpdateSubCategory(SubCategoryDTO subCategory)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<SubCategory, SubCategoryDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<SubCategoryDTO, SubCategory>());
             var mapper = new Mapper(config);
             DataBase.SubCategories.Update(mapper.Map<SubCategory>(subCategory));
             DataBase.save();

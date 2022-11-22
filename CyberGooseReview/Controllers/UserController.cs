@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.Interfaces;
 using CyberGooseReview.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CyberGooseReview.Controllers
@@ -79,6 +80,78 @@ namespace CyberGooseReview.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            await _userService.LogOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Profile(string id)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Manage()
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserManageModel>());
+            var mapper = new Mapper(config);
+            return View(mapper.Map<UserManageModel>(_userService.GetCurrentUser(User)));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Manage(UserManageModel model)
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    model.ProfilePicture = dataStream.ToArray();
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<UserManageModel, UserDTO>());
+                var mapper = new Mapper(config);
+                var result = await _userService.UpdateUser(mapper.Map<UserDTO>(model), User);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        if (!error.Description.Contains("Username"))
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                    return View(model);
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult Delete()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmDelete()
+        {
+            var result = await _userService.DeleteUser(User);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (!error.Description.Contains("Username"))
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return View();
+            }
             await _userService.LogOut();
             return RedirectToAction("Index", "Home");
         }

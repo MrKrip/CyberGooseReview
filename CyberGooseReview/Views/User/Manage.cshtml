@@ -1,0 +1,35 @@
+﻿@model UserManageModel
+
+<form method="post" enctype="multipart/form-data" asp-area="" asp-action="Manage" asp-controller="User">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserNick"></label>
+                <input asp-for="UserNick" class="form-control" />
+                <span asp-validation-for="UserNick" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a class="btn btn-danger" asp-action="Delete" asp-controller="User">Delete account</a>
+        </div>
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProfilePicture" style="width: 100%;"></label>
+                <img id="ProfilePicture" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProfilePicture))">
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="ProfilePicture"
+                       class="form-control"
+                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                       onchange="document.getElementById('ProfilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>

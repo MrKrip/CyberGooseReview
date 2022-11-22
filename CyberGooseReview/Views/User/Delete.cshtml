@@ -1,0 +1,10 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Are you sure you want to delete your account?</h1>
+    <p><div asp-validation-summary="ModelOnly" class="text-danger"></div></p>
+    <p>
+        <form method="post" asp-action="ConfirmDelete" asp-controller="User">
+            <button type="submit" class="btn btn-danger">Yes</button>
+            <a class="btn btn-primary" asp-action="Manage" asp-controller="User">No</a>
+        </form>
+    </p>
+</div>

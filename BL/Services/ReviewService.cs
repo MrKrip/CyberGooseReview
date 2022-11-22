@@ -16,7 +16,7 @@ namespace BLL.Services
 
         public void CreateReview(ReviewDTO review)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Review, ReviewDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ReviewDTO, Review>());
             var mapper = new Mapper(config);
             DataBase.Reviews.Create(mapper.Map<Review>(review));
             DataBase.save();
@@ -31,6 +31,13 @@ namespace BLL.Services
         public void DisLikeReview(int reviewId, string userId)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<ReviewDTO> FindUserReviews(Func<Review, bool> predicate)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ReviewDTO, Review>());
+            var mapper = new Mapper(config);
+            return DataBase.Reviews.Find(predicate).Select(r => mapper.Map<ReviewDTO>(r));
         }
 
         public IEnumerable<ReviewDTO> GetAllReviewsToProduct(int productId)
@@ -61,7 +68,7 @@ namespace BLL.Services
 
         public void UpdateReview(ReviewDTO review)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Review, ReviewDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ReviewDTO, Review>());
             var mapper = new Mapper(config);
             DataBase.Reviews.Update(mapper.Map<Review>(review));
             DataBase.save();

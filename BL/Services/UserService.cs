@@ -47,12 +47,6 @@ namespace BLL.Services
             return result;
         }
 
-        public void DeleteUser(string id)
-        {
-            DataBase.Users.Delete(id);
-            DataBase.save();
-        }
-
         public UserDataDTO GetUserById(string id)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserData, UserDataDTO>());
@@ -85,12 +79,21 @@ namespace BLL.Services
             }
         }
 
-        public void UpdateUser(UserDTO user)
+        public async Task<IdentityResult> UpdateUser(UserDTO EditUser, ClaimsPrincipal user)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, User>());
             var mapper = new Mapper(config);
-            DataBase.Users.Update(mapper.Map<User>(user));
+            var NewUser = await _userManager.GetUserAsync(user);
+            NewUser.UserNick = EditUser.UserNick;
+            NewUser.UserName = EditUser.Email;
+            NewUser.Email = EditUser.Email;
+            if (EditUser.ProfilePicture.Length > 0)
+            {
+                NewUser.ProfilePicture = EditUser.ProfilePicture;
+            }
+            var result = await DataBase.Users.Update(mapper.Map<User>(NewUser), _userManager);
             DataBase.save();
+            return result;
         }
 
         public async Task LogOut()
@@ -158,6 +161,11 @@ namespace BLL.Services
         public async Task<IEnumerable<string>> GetUserRoles(string id)
         {
             return await DataBase.Users.GetUserRoles(id, _userManager);
+        }
+
+        public async Task<IdentityResult> DeleteUser(ClaimsPrincipal user)
+        {
+            return await DataBase.Users.Delete(await _userManager.GetUserAsync(user),_userManager);
         }
     }
 }

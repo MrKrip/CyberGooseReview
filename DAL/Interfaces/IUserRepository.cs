@@ -8,8 +8,8 @@ namespace DAL.Interfaces
         S Get(string id);
         IEnumerable<S> Find(Func<T, bool> predicate);
         Task<IdentityResult> Create(T item, UserManager<T> userManager);
-        void Update(T item);
-        void Delete(string id);
+        Task<IdentityResult> Update(T item, UserManager<T> userManager);
+        Task<IdentityResult> Delete(T item,UserManager<T> userManager);
         Task LogIn(T item, SignInManager<T> signInManager);
         Task<IdentityResult> AddRolesToUser(string id, IEnumerable<string> roles, UserManager<T> userManager, RoleManager<IdentityRole> roleManager);
         Task<IdentityResult> AddRoleToUser(string id, string roles, UserManager<T> userManager);

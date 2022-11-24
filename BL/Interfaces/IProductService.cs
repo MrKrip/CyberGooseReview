@@ -8,7 +8,7 @@ namespace BLL.Interfaces
         public void CreateCategory(CategoryDTO category);
         public void UpdateCategory(CategoryDTO category);
         public void DeleteCategory(int id);
-        public void CreateSubCategory(SubCategoryDTO subCategory);
+        public bool CreateSubCategory(SubCategoryDTO subCategory);
         public void UpdateSubCategory(SubCategoryDTO subCategory);
         public void DeleteSubCategory(int id);
         public void CreateProduct(ProductDTO product);
@@ -17,7 +17,12 @@ namespace BLL.Interfaces
         public IEnumerable<CategoryDTO> GetCategories();
         public IEnumerable<SubCategoryDTO> GetAllSubCatForCat(int categoryId);
         public IEnumerable<ProductDTO> GetAllProducts(int category);
-        public IEnumerable<ProductDTO> FindProducts(Func<Product,bool> predicate);
+        public IEnumerable<ProductDTO> FindProducts(Func<Product, bool> predicate);
+        public IEnumerable<SubCategoryDTO> GetAllSubCategories();
+        public IEnumerable<SubCategoryDTO> FindSubCategories(Func<SubCategory, bool> predicate);
+        public IEnumerable<CategoryDTO> FindCategories(Func<Category, bool> predicate);
         public ProductDTO GetProduct(int id);
+        public CategoryDTO GetCategory(int id);
+        public bool HasSubCategory(int categoryId, int subCategoryId);
     }
 }

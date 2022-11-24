@@ -1,0 +1,36 @@
+﻿@model CategoryManageModel
+
+<form method="post" asp-area="" asp-controller="Product" asp-action="ManageCategory" asp-route-id="@ViewBag.Id">
+    <div class="card">
+        <div class="card-header">
+            <h2>Manage "@ViewBag.CategoryName" Category</h2>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Name">Category Name</label>
+                <input asp-for="Name" class="form-control form-control-lg" />
+                <span asp-validation-for="Name" />
+            </div>
+
+            @for (int i = 0; i < Model.subCategories.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model.subCategories[i].Id" />
+                    <input type="hidden" asp-for="@Model.subCategories[i].Name" />
+                    <input asp-for="@Model.subCategories[i].Selected" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.subCategories[i].Selected">
+                        @Model.subCategories[i].Name
+                    </label>
+                </div>
+            }
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Update Category" class="btn btn-primary"
+                   style="width:auto" />
+            <a asp-controller="Product" asp-action="Categories" class="btn btn-primary" style="width:auto">Cancel</a>
+        </div>
+    </div>
+</form>

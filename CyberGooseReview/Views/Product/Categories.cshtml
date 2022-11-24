@@ -1,0 +1,51 @@
+﻿@model ItemsPageModel<CategoryModel>
+
+<h1 class="display-4">Categories Manager</h1>
+<form method="get" asp-area="" asp-controller="Product" asp-action="Categories">
+    <div class="input-group">
+        <input name="CatName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Find category</button>
+        </span>
+    </div>
+</form>
+<br />
+<a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="NewCategory">New Category</a>
+<br />
+<a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="Categories">Reset Search</a>
+<br />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Name</th>
+            <th>Subcategories</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Items)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>@string.Join(" , ",category.subCategories.Select(sc=>sc.Name).ToList())</td>
+                <td>
+                    <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="ManageCategory" asp-route-id="@category.Id">Manage Category</a>
+                    <a class="btn btn-danger" asp-area="" asp-controller="Product" asp-action="DeleteCategory" asp-route-id="@category.Id">Delete Category</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    @if (Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="Categories" asp-route-page="@(Model.PageModel.PageNumber-1)" asp-route-CatName="@ViewBag.category">Previous Page</a>
+    }
+    @if (Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="Categories" asp-route-page="@(Model.PageModel.PageNumber+1)" asp-route-CatName="@ViewBag.category">Next Page</a>
+    }
+</p>

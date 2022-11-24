@@ -13,5 +13,6 @@ namespace DAL.Entity
         public IEnumerable<ProductSubCategories> SubCategories { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string? YouTubeLink { get; set; }
     }
 }

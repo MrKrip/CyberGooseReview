@@ -1,0 +1,57 @@
+﻿@model ItemsPageModel<SubCategoryModel>
+
+<h1 class="display-4">SubCategories Manager</h1>
+
+<form method="get" asp-area="" asp-controller="Product" asp-action="SubCategories">
+    <div class="input-group">
+        <input name="SubCatName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Find Subcategory</button>
+        </span>
+    </div>
+</form>
+<br />
+<form method="post" asp-area="" asp-controller="Product" asp-action="NewSubCat">
+    <div class="input-group">
+        <input name="subCatName" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-primary">Add New Subcategory</button>
+        </span>
+    </div>
+</form>
+<br />
+<a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="SubCategories">Reset Search</a>
+<br />
+<div class="form-outline mb-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var subCat in Model.Items)
+        {
+            <tr>
+                <td>@subCat.Id</td>
+                <td>@subCat.Name</td>
+                <td><a class="btn btn-danger" asp-area="" asp-controller="Product" asp-action="DeleteSubCat" asp-route-id="@subCat.Id">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    @if (Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="SubCategories" asp-route-page="@(Model.PageModel.PageNumber-1)" asp-route-SubCatName="@ViewBag.subCat">Previous Page</a>
+    }
+    @if (Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="SubCategories" asp-route-page="@(Model.PageModel.PageNumber+1)" asp-route-SubCatName="@ViewBag.subCat">Next Page</a>
+    }
+</p>

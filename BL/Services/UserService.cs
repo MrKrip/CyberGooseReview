@@ -87,7 +87,7 @@ namespace BLL.Services
             NewUser.UserNick = EditUser.UserNick;
             NewUser.UserName = EditUser.Email;
             NewUser.Email = EditUser.Email;
-            if (EditUser.ProfilePicture.Length > 0)
+            if (EditUser.ProfilePicture != null && EditUser.ProfilePicture.Length > 0)
             {
                 NewUser.ProfilePicture = EditUser.ProfilePicture;
             }
@@ -165,7 +165,7 @@ namespace BLL.Services
 
         public async Task<IdentityResult> DeleteUser(ClaimsPrincipal user)
         {
-            return await DataBase.Users.Delete(await _userManager.GetUserAsync(user),_userManager);
+            return await DataBase.Users.Delete(await _userManager.GetUserAsync(user), _userManager);
         }
     }
 }

@@ -22,7 +22,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProfilePicture" style="width: 100%;"></label>
-                <img id="ProfilePicture" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProfilePicture))">
+                <img class="img-thumbnail" id="ProfilePicture" object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProfilePicture))">
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"
                        asp-for="ProfilePicture"

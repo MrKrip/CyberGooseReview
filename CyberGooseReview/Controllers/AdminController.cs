@@ -37,7 +37,7 @@ namespace CyberGooseReview.Controllers
                 var count = roles.Count();
                 roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
-                ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles.Reverse(), pageModel);
                 return View(model);
             }
             else
@@ -49,7 +49,7 @@ namespace CyberGooseReview.Controllers
                     var count = roles.Count();
                     roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles.Reverse(), pageModel);
                     return View(model);
                 }
                 else
@@ -59,7 +59,7 @@ namespace CyberGooseReview.Controllers
                     var count = roles.Count();
                     roles = roles.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles, pageModel);
+                    ItemsPageModel<RoleModel> model = new ItemsPageModel<RoleModel>(roles.Reverse(), pageModel);
                     return View(model);
                 }
             }

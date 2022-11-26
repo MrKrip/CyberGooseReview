@@ -22,7 +22,19 @@ namespace CyberGooseReview.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var Products = _productService.GetAllProducts().Select(p => new ProductModel()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Id = p.Id,
+                UserRating = p.UserRating,
+                Country = p.Country,
+                CommonRating = p.CommonRating,
+                CriticRating = p.CriticRating,
+                Year = p.Year
+            });
+            return View(Products.Reverse());
         }
 
         public IActionResult Privacy()

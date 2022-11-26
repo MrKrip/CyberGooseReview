@@ -2,7 +2,7 @@
 @model ProductManageModel
 @inject IProductService productService
 
-<form method="post" asp-area="" enctype="multipart/form-data" asp-controller="Product" asp-action="NewProduct">
+<form method="post" asp-area="" enctype="multipart/form-data" asp-controller="Product" asp-action="ManageProduct" asp-route-id="@ViewBag.Id">
     <div class="card">
         <div class="card-header">
             <h2>New Category</h2>
@@ -35,7 +35,7 @@
 
             <div class="form-outline mb-4">
                 <label class="form-label" asp-for="Description">Description</label>
-                <textarea asp-for="Description" class="form-control"></textarea>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" />
             </div>
 
@@ -46,7 +46,7 @@
 
             <div class="form-group">
                 <label asp-for="ProductPicture" style="width: 100%;"></label>
-                <img id="ProfilePicture" class="img-thumbnail" src="">
+                <img class="img-thumbnail" id="ProductPicture" object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProductPicture))">
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"
                        asp-for="ProductPicture"
@@ -58,7 +58,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
         </div>
         <div class="card-footer">
-            <input type="submit" value="Add new Product" class="btn btn-primary"
+            <input type="submit" value="Updte Product" class="btn btn-primary"
                    style="width:auto" />
             <a asp-controller="Product" asp-action="Products" class="btn btn-primary" style="width:auto">Cancel</a>
         </div>

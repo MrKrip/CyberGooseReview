@@ -34,7 +34,7 @@ namespace CyberGooseReview.Controllers
                 var count = subCat.Count();
                 subCat = subCat.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
-                ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat, pageModel);
+                ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat.Reverse(), pageModel);
                 return View(model);
             }
             else
@@ -46,7 +46,7 @@ namespace CyberGooseReview.Controllers
                     var count = subCat.Count();
                     subCat = subCat.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat, pageModel);
+                    ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat.Reverse(), pageModel);
                     return View(model);
                 }
                 else
@@ -56,7 +56,7 @@ namespace CyberGooseReview.Controllers
                     var count = subCat.Count();
                     subCat = subCat.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat, pageModel);
+                    ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat.Reverse(), pageModel);
                     return View(model);
                 }
             }
@@ -102,7 +102,7 @@ namespace CyberGooseReview.Controllers
                 var count = Categories.Count();
                 Categories = Categories.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
-                ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories, pageModel);
+                ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories.Reverse(), pageModel);
                 return View(model);
             }
             else
@@ -121,7 +121,7 @@ namespace CyberGooseReview.Controllers
                     var count = Categories.Count();
                     Categories = Categories.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories, pageModel);
+                    ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories.Reverse(), pageModel);
                     return View(model);
                 }
                 else
@@ -138,7 +138,7 @@ namespace CyberGooseReview.Controllers
                     var count = Categories.Count();
                     Categories = Categories.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories, pageModel);
+                    ItemsPageModel<CategoryModel> model = new ItemsPageModel<CategoryModel>(Categories.Reverse(), pageModel);
                     return View(model);
                 }
             }
@@ -225,7 +225,7 @@ namespace CyberGooseReview.Controllers
                 var count = Products.ToList().Count();
                 Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
-                ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products.Reverse(), pageModel);
                 return View(model);
             }
             else
@@ -246,7 +246,7 @@ namespace CyberGooseReview.Controllers
                     var count = Products.Count();
                     Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products.Reverse(), pageModel);
                     return View(model);
                 }
                 else
@@ -265,7 +265,7 @@ namespace CyberGooseReview.Controllers
                     var count = Products.Count();
                     Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
-                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products.Reverse(), pageModel);
                     return View(model);
                 }
             }
@@ -391,9 +391,92 @@ namespace CyberGooseReview.Controllers
             _productService.DeleteProduct(id);
             return RedirectToAction("Products");
         }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpGet]
+        public IActionResult ManageProduct(int id)
+        {
+            ViewBag.Id = id;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductManageModel>());
+            var mapper = new Mapper(config);
+            return View(mapper.Map<ProductManageModel>(_productService.GetProduct(id)));
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ManageProduct(ProductManageModel model, int Id)
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    model.ProductPicture = dataStream.ToArray();
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                _productService.UpdateProduct(new ProductDTO()
+                {
+                    Id = Id,
+                    CategoryId = model.CategoryId,
+                    Name = model.Name,
+                    Description = model.Description,
+                    Category = _productService.GetCategory(model.CategoryId),
+                    YouTubeLink = model.YouTubeLink,
+                    ProductPicture = model.ProductPicture,
+                    Year = model.Year,
+                    Country = model.Country
+                });
+                return RedirectToAction("Products");
+            }
+            return View(model);
+        }
+
         public IActionResult Search(string ProductName)
         {
-            return View();
+            var Product = _productService.FindProducts(p => p.Name.ToLower().Contains(ProductName.ToLower())).Select(p => new ProductModel()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Id = p.Id,
+                UserRating = p.UserRating,
+                Country = p.Country,
+                CommonRating = p.CommonRating,
+                CriticRating = p.CriticRating,
+                Year = p.Year
+            });
+            return View(Product);
+        }
+
+        public IActionResult Product(int Id)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CategoryDTO, CategoryModel>());
+            var mapper = new Mapper(config);
+            var p = _productService.GetProduct(Id);
+            var ProductModel = new ProductModel()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Id = p.Id,
+                UserRating = p.UserRating,
+                Country = p.Country,
+                CommonRating = p.CommonRating,
+                CriticRating = p.CriticRating,
+                Year = p.Year,
+                CategoryId = p.CategoryId,
+                Category = mapper.Map<CategoryModel>(_productService.GetCategory(p.CategoryId)),
+                SubCategories = _productService.GetAllSubCatForCat(p.CategoryId).Select(sc => new SubCategoryModel()
+                {
+                    Id = sc.Id,
+                    Name = sc.Name
+                }).ToList(),
+                YouTubeLink = p.YouTubeLink
+            };
+            return View(ProductModel);
         }
     }
 }

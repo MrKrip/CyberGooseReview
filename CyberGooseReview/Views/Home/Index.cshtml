@@ -1,38 +1,24 @@
-﻿@using System.Security.Claims
+﻿@model IEnumerable<ProductModel>
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <div class="row g-0 bg-light position-relative">
-        <div class="col-md-6 mb-md-0 p-md-4">
-            <img src="..." class="w-100" alt="...">
-        </div>
-        <div class="col-md-6 p-4 ps-md-0">
-            <h5 class="mt-0">Columns with stretched link</h5>
-            <p>Another instance of placeholder content for this other custom component. It is intended to mimic what some real-world content would look like, and we're using it here to give the component a bit of body and size.</p>
-            <a href="1" class="stretched-link">Go somewhere</a>
-        </div>
-    </div>
-    <div class="row g-0 bg-light position-relative">
-        <div class="col-md-6 mb-md-0 p-md-4">
-            <img src="..." class="w-100" alt="...">
-        </div>
-        <div class="col-md-6 p-4 ps-md-0">
-            <h5 class="mt-0">Columns with stretched link</h5>
-            <p>Another instance of placeholder content for this other custom component. It is intended to mimic what some real-world content would look like, and we're using it here to give the component a bit of body and size.</p>
-            <a href="2" class="stretched-link">Go somewhere</a>
-        </div>
-    </div>
-    <div class="row g-0 bg-light position-relative">
-        <div class="col-md-6 mb-md-0 p-md-4">
-            <img src="..." class="w-100" alt="...">
-        </div>
-        <div class="col-md-6 p-4 ps-md-0">
-            <h5 class="mt-0">Columns with stretched link</h5>
-            <p>Another instance of placeholder content for this other custom component. It is intended to mimic what some real-world content would look like, and we're using it here to give the component a bit of body and size.</p>
-            <a href="3" class="stretched-link">Go somewhere</a>
-        </div>
-    </div>
 </div>
+@foreach (var product in Model)
+{
+    <div class="row g-0 bg-light position-relative">
+        <div class="col-md-3 mb-md-0 p-md-4">
+            <img src="data:image/*;base64,@(Convert.ToBase64String(product.ProductPicture))" style="width:200px;height:200px;" class="figure-img img-fluid rounded" alt="...">
+        </div>
+        <div class="col-md-6 p-4 ps-md-0">
+            <h5 class="mt-0">@product.Name</h5>
+            <p>
+                <div class="text-truncate-container">@product.Description</div>
+            </p>
+            <a class="stretched-link" asp-action="Product" asp-controller="Product" asp-route-id="@product.Id">More details...</a>
+        </div>
+    </div>
+}
+

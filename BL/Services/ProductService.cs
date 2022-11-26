@@ -89,7 +89,10 @@ namespace BLL.Services
                 Name = product.Name,
                 ProductPicture = product.ProductPicture,
                 Description = product.Description,
-                YouTubeLink = product.YouTubeLink
+                YouTubeLink = product.YouTubeLink,
+                UserRating = 0,
+                CommonRating = 0,
+                CriticRating = 0
             });
             DataBase.save();
             foreach (var sc in product.SubCategories)
@@ -140,9 +143,24 @@ namespace BLL.Services
 
         public IEnumerable<ProductDTO> FindProducts(Func<Product, bool> predicate)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
             var mapper = new Mapper(config);
-            return DataBase.Products.Find(predicate).Select(p => mapper.Map<ProductDTO>(p));
+            return DataBase.Products.Find(predicate).ToList().Select(p => new ProductDTO()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Category = mapper.Map<CategoryDTO>(p.Category),
+                CategoryId = p.CategoryId,
+                CommonRating = p.CommonRating,
+                Country = p.Country,
+                CriticRating = p.CriticRating,
+                UserRating = p.UserRating,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Year = p.Year,
+                YouTubeLink = p.YouTubeLink,
+                SubCategories = DataBase.ProductSubCategories.Find(psc => psc.ProductId == p.Id).Select(psc => new SubCategoryDTO() { Id = psc.Id, Name = psc.SubCategory.Name })
+            });
         }
 
         public IEnumerable<SubCategoryDTO> FindSubCategories(Func<SubCategory, bool> predicate)
@@ -276,7 +294,27 @@ namespace BLL.Services
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>());
             var mapper = new Mapper(config);
-            DataBase.Products.Update(mapper.Map<Product>(product));
+            var RealProduct = DataBase.Products.Get(product.Id);
+            if (RealProduct.CategoryId != product.CategoryId)
+            {
+                var ProdSubCat = DataBase.ProductSubCategories.Find(psc => psc.ProductId == product.Id);
+                foreach (var prodsubcat in ProdSubCat)
+                {
+                    DataBase.ProductSubCategories.Delete(prodsubcat.Id);
+                }
+            }
+            if (product.ProductPicture != null && product.ProductPicture.Length > 0)
+            {
+                RealProduct.ProductPicture = product.ProductPicture;
+            }
+            RealProduct.CategoryId = product.CategoryId;
+            RealProduct.Name = product.Name;
+            RealProduct.Description = product.Description;
+            RealProduct.Category = DataBase.Categories.Get(product.CategoryId);
+            RealProduct.YouTubeLink = product.YouTubeLink;
+            RealProduct.Year = product.Year;
+            RealProduct.Country = product.Country;
+            DataBase.Products.Update(RealProduct);
             DataBase.save();
         }
 

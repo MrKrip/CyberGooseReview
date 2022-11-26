@@ -12,6 +12,9 @@
         public string? YouTubeLink { get; set; }
         public int UserRating { get; set; }
         public int CriticRating { get; set; }
+        public int CommonRating { get; set; }
         public byte[] ProductPicture { get; set; } = null!;
+        public int Year { get; set; }
+        public string Country { get; set; }
     }
 }

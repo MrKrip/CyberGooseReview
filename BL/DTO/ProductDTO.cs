@@ -13,7 +13,7 @@
         public int CriticRating { get; set; }
 
         public byte[] ProductPicture { get; set; } = null!;
-        public int CommonRating { get; set; } = -1;
+        public int CommonRating { get; set; }
         public int Year { get; set; }
         public string Country { get; set; }
     }

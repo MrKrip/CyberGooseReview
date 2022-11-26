@@ -37,7 +37,7 @@ namespace DAL.Repositories
 
         public IEnumerable<ProductSubCategories> GetAll()
         {
-            return db.ProductSubCategories;
+            return db.ProductSubCategories.Include(sc => sc.SubCategory).Include(p => p.Product);
         }
 
         public void Update(ProductSubCategories item)

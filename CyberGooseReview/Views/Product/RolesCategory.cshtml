@@ -1,10 +1,10 @@
 ﻿@model List<CheckElementModel>
 
-<form method="post" asp-area="" asp-controller="Admin" asp-action="ManageRoles" asp-route-id="@ViewBag.Id">
+<form method="post" asp-area="" asp-controller="Product" asp-action="RolesCategory" asp-route-id="@ViewBag.Id">
     <div class="card">
         <div class="card-header">
-            <h2>Manage User Roles</h2>
-            Add/Remove Roles for User / @ViewBag.UserName.
+            <h2>Manage Category Roles</h2>
+            Add/Remove Roles for Category  @ViewBag.Category.
         </div>
         <div class="card-body">
             @for (int i = 0; i < Model.Count; i++)
@@ -23,7 +23,7 @@
         <div class="card-footer">
             <input type="submit" value="Update" class="btn btn-primary"
                    style="width:auto" />
-            <a asp-controller="Admin" asp-action="UserRoles" class="btn btn-primary" style="width:auto">Cancel</a>
+            <a asp-controller="Product" asp-action="Categories" class="btn btn-primary" style="width:auto">Cancel</a>
         </div>
     </div>
 </form>

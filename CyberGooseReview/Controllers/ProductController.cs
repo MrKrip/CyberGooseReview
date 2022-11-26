@@ -92,7 +92,13 @@ namespace CyberGooseReview.Controllers
             var mapper = new Mapper(config);
             if (CatName == null)
             {
-                var Categories = _productService.GetCategories().Select(sc => new CategoryModel() { subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)), Id = sc.Id, Name = sc.Name });
+                var Categories = _productService.GetCategories().Select(sc => new CategoryModel()
+                {
+                    subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)),
+                    Id = sc.Id,
+                    Name = sc.Name,
+                    Roles = _productService.GetRolesForCat(sc.Id).Select(rc => rc.Name)
+                });
                 var count = Categories.Count();
                 Categories = Categories.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
@@ -102,7 +108,13 @@ namespace CyberGooseReview.Controllers
             else
             {
                 var Categories = _productService.FindCategories(c => c.Name.ToLower().Contains(CatName.ToLower()))
-                    .Select(sc => new CategoryModel() { subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)), Id = sc.Id, Name = sc.Name });
+                    .Select(sc => new CategoryModel()
+                    {
+                        subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)),
+                        Id = sc.Id,
+                        Name = sc.Name,
+                        Roles = _productService.GetRolesForCat(sc.Id).Select(rc => rc.Name)
+                    });
                 if (Categories.Any())
                 {
                     ViewBag.category = CatName;
@@ -116,7 +128,13 @@ namespace CyberGooseReview.Controllers
                 {
                     ModelState.AddModelError(string.Empty, $"Subcategory \"{CatName}\" does not exist");
                     Categories = _productService.GetCategories()
-                        .Select(sc => new CategoryModel() { subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)), Id = sc.Id, Name = sc.Name });
+                        .Select(sc => new CategoryModel()
+                        {
+                            subCategories = sc.subCategories.Select(SC => mapper.Map<SubCategoryModel>(SC)),
+                            Id = sc.Id,
+                            Name = sc.Name,
+                            Roles = _productService.GetRolesForCat(sc.Id).Select(rc => rc.Name)
+                        });
                     var count = Categories.Count();
                     Categories = Categories.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
@@ -183,6 +201,196 @@ namespace CyberGooseReview.Controllers
             return RedirectToAction("Categories");
         }
 
+        [Authorize(Roles = "Moderator,Admin")]
+        public IActionResult Products(string? ProductName, int page = 1)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<SubCategoryDTO, SubCategoryModel>();
+                cfg.CreateMap<CategoryDTO, CategoryModel>();
+            });
+            var mapper = new Mapper(config);
+            if (ProductName == null)
+            {
+                var Products = _productService.GetAllProducts().Select(p => new ProductModel()
+                {
+                    Name = p.Name,
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    CriticRating = p.CriticRating,
+                    UserRating = p.UserRating,
+                    SubCategories = p.SubCategories.Select(sc => new SubCategoryModel() { Id = sc.Id, Name = sc.Name }).ToList(),
+                    Category = mapper.Map<CategoryModel>(p.Category)
+                });
+                var count = Products.ToList().Count();
+                Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
+                PageModel pageModel = new PageModel(count, page, pageSize);
+                ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                return View(model);
+            }
+            else
+            {
+                var Products = _productService.FindProducts(c => c.Name.ToLower().Contains(ProductName.ToLower())).Select(p => new ProductModel()
+                {
+                    Name = p.Name,
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    CriticRating = p.CriticRating,
+                    UserRating = p.UserRating,
+                    SubCategories = p.SubCategories.Select(sc => mapper.Map<SubCategoryModel>(sc)).ToList(),
+                    Category = mapper.Map<CategoryModel>(p.Category)
+                }); ;
+                if (Products.Any())
+                {
+                    ViewBag.product = ProductName;
+                    var count = Products.Count();
+                    Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
+                    PageModel pageModel = new PageModel(count, page, pageSize);
+                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                    return View(model);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, $"Product \"{ProductName}\" does not exist");
+                    Products = _productService.GetAllProducts().Select(p => new ProductModel()
+                    {
+                        Name = p.Name,
+                        Id = p.Id,
+                        CategoryId = p.CategoryId,
+                        CriticRating = p.CriticRating,
+                        UserRating = p.UserRating,
+                        SubCategories = p.SubCategories.Select(sc => mapper.Map<SubCategoryModel>(sc)).ToList(),
+                        Category = mapper.Map<CategoryModel>(p.Category)
+                    }); ;
+                    var count = Products.Count();
+                    Products = Products.Skip((page - 1) * pageSize).Take(pageSize);
+                    PageModel pageModel = new PageModel(count, page, pageSize);
+                    ItemsPageModel<ProductModel> model = new ItemsPageModel<ProductModel>(Products, pageModel);
+                    return View(model);
+                }
+            }
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpGet]
+        public IActionResult NewProduct()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> NewProductAsync(ProductManageModel model)
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    model.ProductPicture = dataStream.ToArray();
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                _productService.CreateProduct(new ProductDTO()
+                {
+                    CategoryId = model.CategoryId,
+                    Name = model.Name,
+                    Description = model.Description,
+                    Category = _productService.GetCategory(model.CategoryId),
+                    YouTubeLink = model.YouTubeLink,
+                    SubCategories = new List<SubCategoryDTO>(),
+                    ProductPicture = model.ProductPicture,
+                    Year = model.Year,
+                    Country = model.Country
+                });
+                return RedirectToAction("Products");
+            }
+            return View(model);
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpGet]
+        public IActionResult RolesCategory(int id)
+        {
+            ViewBag.Id = id;
+            ViewBag.Category = _productService.GetCategory(id).Name;
+            var roles = _userService.GetAllRoles();
+            var model = new List<CheckElementModel>();
+            foreach (var role in roles)
+            {
+                var categoryRolesViewModel = new CheckElementModel
+                {
+                    Id = role.Id,
+                    Name = role.Name
+                };
+                if (_productService.IsCategoryHasRole(id, role.Id))
+                {
+                    categoryRolesViewModel.Selected = true;
+                }
+                else
+                {
+                    categoryRolesViewModel.Selected = false;
+                }
+                model.Add(categoryRolesViewModel);
+            }
+            return View(model);
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> RolesCategory(List<CheckElementModel> model, int id)
+        {
+            await _productService.AddRolesToCat(id, model.Select(m => new RoleDTO() { Id = m.Id, Name = m.Name, Selected = m.Selected }).ToList());
+            return RedirectToAction("Categories");
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpGet]
+        public IActionResult ProductSubCat(int id, int CatId)
+        {
+            ViewBag.Id = id;
+            ViewBag.Product = _productService.GetProduct(id).Name;
+            var SubCat = _productService.GetAllSubCatForCat(CatId);
+            var model = new List<CheckElementModel>();
+            foreach (var subCategory in SubCat)
+            {
+                var ProductSubCatModel = new CheckElementModel
+                {
+                    Id = subCategory.Id.ToString(),
+                    Name = subCategory.Name
+                };
+                if (_productService.IsProductHasSubCat(id, subCategory.Id))
+                {
+                    ProductSubCatModel.Selected = true;
+                }
+                else
+                {
+                    ProductSubCatModel.Selected = false;
+                }
+                model.Add(ProductSubCatModel);
+            }
+            return View(model);
+        }
+
+
+        [Authorize(Roles = "Moderator,Admin")]
+        [HttpPost]
+        public IActionResult ProductSubCat(List<CheckElementModel> model, int id)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CheckElementModel, SubCatCheckDTO>());
+            var mapper = new Mapper(config);
+            _productService.AddSubCategoriesToProduct(id, model.Select(m => mapper.Map<SubCatCheckDTO>(m)).ToList());
+            return RedirectToAction("Products");
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        public IActionResult DeleteProduct(int id)
+        {
+            _productService.DeleteProduct(id);
+            return RedirectToAction("Products");
+        }
         public IActionResult Search(string ProductName)
         {
             return View();

@@ -14,13 +14,14 @@
                 <img src="data:image/*;base64,@(Convert.ToBase64String(userService.GetCurrentUser(User).ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
             </a>
             <ul class="dropdown-menu text-small">
-                <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Manage">Manage</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Profile">My profile</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Manage">Manage my profile</a></li>
             @if (userService.IsCurrentUserHasRole(User, "Admin").Result || userService.IsCurrentUserHasRole(User, "Moderator").Result)
             {
                 @if (userService.IsCurrentUserHasRole(User, "Admin").Result)
                 {
                             <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Roles">Manage roles</a></li>
-                            <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="UserRoles">Manage user roles</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="UserRoles">Manage users</a></li>
                 }
                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Categories">Manage categories</a></li>
                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="SubCategories">Manage subcategories</a></li>

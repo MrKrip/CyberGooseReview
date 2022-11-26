@@ -1,0 +1,66 @@
+﻿@using BLL.Interfaces
+@model ProductManageModel
+@inject IProductService productService
+
+<form method="post" asp-area="" enctype="multipart/form-data" asp-controller="Product" asp-action="NewProduct">
+    <div class="card">
+        <div class="card-header">
+            <h2>New Category</h2>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Name">Product Name</label>
+                <input asp-for="Name" class="form-control form-control-lg" />
+                <span asp-validation-for="Name" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="YouTubeLink">YouTube Link</label>
+                <input asp-for="YouTubeLink" class="form-control form-control-lg" />
+                <span asp-validation-for="YouTubeLink" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Year">Year</label>
+                <input asp-for="Year" class="form-control form-control-lg" />
+                <span asp-validation-for="Year" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Country">Country</label>
+                <input asp-for="Country" class="form-control form-control-lg" />
+                <span asp-validation-for="Country" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="CategoryId">Category</label>
+                <select asp-for="CategoryId" asp-items="@(new SelectList(productService.GetCategories(),"Id","Name"))"  class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductPicture" style="width: 100%;"></label>
+                <img id="ProfilePicture" style="width:350px;height:350px; object-fit:cover" src="">
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="ProductPicture"
+                       class="form-control"
+                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                       onchange="document.getElementById('ProfilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="ProductPicture" class="text-danger"></span>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Add new Product" class="btn btn-primary"
+                   style="width:auto" />
+            <a asp-controller="Product" asp-action="Products" class="btn btn-primary" style="width:auto">Cancel</a>
+        </div>
+    </div>
+</form>

@@ -10,15 +10,17 @@
     </div>
 </form>
 <br />
-<a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="NewCategory">New Category</a>
-<br />
-<a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="Categories">Reset Search</a>
+<div class="btn-group">
+    <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="NewCategory">New Category</a>
+    <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="Categories">Reset Search</a>
+</div>
 <br />
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>User</th>
+            <th>Id</th>
             <th>Name</th>
+            <th>Roles</th>
             <th>Subcategories</th>
             <th>Action</th>
         </tr>
@@ -29,10 +31,14 @@
             <tr>
                 <td>@category.Id</td>
                 <td>@category.Name</td>
+                <td>@string.Join(" , ",category.Roles.ToList())</td>
                 <td>@string.Join(" , ",category.subCategories.Select(sc=>sc.Name).ToList())</td>
                 <td>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="ManageCategory" asp-route-id="@category.Id">Manage Category</a>
-                    <a class="btn btn-danger" asp-area="" asp-controller="Product" asp-action="DeleteCategory" asp-route-id="@category.Id">Delete Category</a>
+                    <div class="btn-group">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="RolesCategory" asp-route-id="@category.Id">Manage Roles For Category</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Product" asp-action="ManageCategory" asp-route-id="@category.Id">Manage Category</a>
+                        <a class="btn btn-danger" asp-area="" asp-controller="Product" asp-action="DeleteCategory" asp-route-id="@category.Id">Delete Category</a>
+                    </div>
                 </td>
             </tr>
         }

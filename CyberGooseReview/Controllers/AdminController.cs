@@ -130,13 +130,13 @@ namespace CyberGooseReview.Controllers
             ViewBag.Id = id;
             ViewBag.UserName = _userService.GetUserById(id).UserNick;
             var roles = _userService.GetAllRoles();
-            var model = new List<ManageUserRolesModel>();
+            var model = new List<CheckElementModel>();
             foreach (var role in roles)
             {
-                var userRolesViewModel = new ManageUserRolesModel
+                var userRolesViewModel = new CheckElementModel
                 {
-                    RoleId = role.Id,
-                    RoleName = role.Name
+                    Id = role.Id,
+                    Name = role.Name
                 };
                 if (await _userService.IsUserHasveRole(id, role.Name))
                 {
@@ -152,9 +152,9 @@ namespace CyberGooseReview.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ManageRoles(List<ManageUserRolesModel> model, string id)
+        public async Task<IActionResult> ManageRoles(List<CheckElementModel> model, string id)
         {
-            var result = await _userService.AddRolesToUser(id, model.Select(r => r.RoleName));
+            var result = await _userService.AddRolesToUser(id, model.Where(r=>r.Selected).Select(r => r.Name));
             return RedirectToAction("UserRoles");
         }
     }

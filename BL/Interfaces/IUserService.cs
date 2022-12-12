@@ -26,5 +26,6 @@ namespace BLL.Interfaces
         IEnumerable<IdentityRole> GetAllRoles();
         IEnumerable<IdentityRole> FindRole(Func<IdentityRole, bool> predicate);
         Task<IdentityResult> DeleteRole(string id);
+        public Task<IEnumerable<string>> CriticRoles(string UserId,int CatId);
     }
 }

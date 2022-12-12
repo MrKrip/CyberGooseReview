@@ -3,15 +3,20 @@ using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entity;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services
 {
     public class ReviewService : IReviewService
     {
         private IUnitOfWork DataBase;
-        public ReviewService(IUnitOfWork db)
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public ReviewService(IUnitOfWork db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             DataBase = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public void CreateReview(ReviewDTO review)
@@ -62,6 +67,11 @@ namespace BLL.Services
         }
 
         public void LikeReview(int reviewId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdataeRating(int productId)
         {
             throw new NotImplementedException();
         }

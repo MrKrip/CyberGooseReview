@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CyberGooseReview.Controllers.AdminController">
+    <Position X="23" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAQAAAAAAAAAgAAAAIAAIgAAAAgAAQAEAAAAABA=</HashCode>
+      <FileName>Controllers\AdminController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_logger" />
+      <Field Name="_productService" />
+      <Field Name="_reviewService" />
+      <Field Name="_userService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Controllers.HomeController">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <AssociationLine Name="_productService" Type="BLL.Interfaces.IProductService">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.036" Y="-0.281" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAQAAAAAAAAAAIAAAAQAAAREEAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_logger" />
+      <Field Name="_productService" />
+      <Field Name="_reviewService" />
+      <Field Name="_userService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Controllers.ProductController">
+    <Position X="16" Y="8.5" Width="1.5" />
+    <AssociationLine Name="_productService" Type="BLL.Interfaces.IProductService">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.065" Y="0.268" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACCAAwABAZAAAAAAAIAAAgAIAAAEAAAAQAUgAAwABQ=</HashCode>
+      <FileName>Controllers\ProductController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_logger" />
+      <Field Name="_productService" />
+      <Field Name="_reviewService" />
+      <Field Name="_userService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Controllers.UserController">
+    <Position X="16" Y="4.5" Width="1.5" />
+    <AssociationLine Name="_productService" Type="BLL.Interfaces.IProductService">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.065" Y="0.045" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>CAAAAAYAAAAAAAABAAAAAAIAIAEBAAAAARBUAABBAQA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_logger" />
+      <Field Name="_productService" />
+      <Field Name="_reviewService" />
+      <Field Name="_userService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Models.CategoryManageModel">
+    <Position X="12.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\CategoryManageModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="subCategories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Models.CategoryModel">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABACAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\CategoryModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="subCategories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Models.CheckElementModel">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Models\CheckElementModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.ErrorViewModel">
+    <Position X="7" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ErrorViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.ItemsPageModel&lt;T&gt;">
+    <Position X="6" Y="5.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ItemsPageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.PageModel">
+    <Position X="10.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAgAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.ProductManageModel">
+    <Position X="12.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAgAgAAAAAAAAQAAAIAAAAgAAAAAAAAAAg=</HashCode>
+      <FileName>Models\ProductManageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.ProductModel">
+    <Position X="14.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAgAgAABAAAAAQAAAIAAAAgAAAEAAAQCEg=</HashCode>
+      <FileName>Models\ProductModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="SubCategories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="CyberGooseReview.Models.RoleModel">
+    <Position X="8.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RoleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.SubCatCheckModel">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Models\SubCatCheckModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.SubCategoryModel">
+    <Position X="10.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SubCategoryModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.UserLoginModel">
+    <Position X="8.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserLoginModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.UserManageModel">
+    <Position X="8.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACABAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserManageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.UserRegistrationModel">
+    <Position X="10.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAACABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Models\UserRegistrationModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CyberGooseReview.Models.UserRolesModel">
+    <Position X="7" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAACABAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserRolesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Microsoft.Extensions.Logging.ILogger&lt;TCategoryName&gt;" Collapsed="true">
+    <Position X="20.75" Y="7" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="BLL.Interfaces.IProductService" Collapsed="true">
+    <Position X="20.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="BLL.Interfaces.IReviewService" Collapsed="true">
+    <Position X="20.75" Y="10" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="BLL.Interfaces.IUserService" Collapsed="true">
+    <Position X="20.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

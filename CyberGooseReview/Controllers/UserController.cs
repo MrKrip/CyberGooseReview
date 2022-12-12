@@ -131,12 +131,14 @@ namespace CyberGooseReview.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Delete()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ConfirmDelete()
         {
@@ -154,6 +156,40 @@ namespace CyberGooseReview.Controllers
             }
             await _userService.LogOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult NewRewiew(int Rating, string Review, int ProdId)
+        {
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult EditRewiew(int Rating, string Review, int ProdId)
+        {
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult DeleteRewiew(int Rating, string Review, int ProdId)
+        {
+
+            return View();
+        }
+
+        public async Task<int> Like(int id)
+        {
+            return 0;
+        }
+
+        public async Task<int> DisLike(int id)
+        {
+            return 0;
         }
     }
 }

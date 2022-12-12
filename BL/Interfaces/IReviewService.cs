@@ -14,5 +14,6 @@ namespace BLL.Interfaces
         public IEnumerable<ReviewDTO> GetAllReviewsToProduct(int productId);
         public IEnumerable<ReviewDTO> GetAllUserReview(string userId);
         public IEnumerable<ReviewDTO> FindUserReviews(Func<Review,bool> predicate);
+        public void UpdataeRating(int productId);
     }
 }

@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DAL.Entity.CategoriesSubCategories">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAgAAAAAAAAAACgAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Entity\CategoriesSubCategories.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+      <Property Name="SubCategory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Entity.Category">
+    <Position X="10.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entity\Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Entity.CategoryRoles">
+    <Position X="12" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAAAgAAEAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Entity\CategoryRoles.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+      <Property Name="Role" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Entity.Product">
+    <Position X="4.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAgAgAABAAAAAQAAAIAAAAgAAAEAAAACEg=</HashCode>
+      <FileName>Entity\Product.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Entity.ProductSubCategories">
+    <Position X="8.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entity\ProductSubCategories.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Product" />
+      <Property Name="SubCategory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Entity.Review">
+    <Position X="12" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAADAAAAAAAAAAAAAAAAAAgAAAAABAECAAAgAAgAAAA=</HashCode>
+      <FileName>Entity\Review.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Product" />
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Entity.SubCategory">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entity\SubCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Entity.User">
+    <Position X="6.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAAAAAAAhAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Entity\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Entity.UserData">
+    <Position X="14" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABCAAAAACAhAAAAAAAAAAAAAAAAAAAABQAAAAAAAAA=</HashCode>
+      <FileName>Entity\UserData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Entity.UserLikes">
+    <Position X="10" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAAAAAAAAAgAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Entity\UserLikes.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DAL.Context.DefaultContext">
+    <Position X="2" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAAEAAABAAAAAAAAAQAAAAAAgAEAAAAAAAAAAQAAQ=</HashCode>
+      <FileName>Context\DefaultContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserLikes" />
+      <Property Name="Categories" />
+      <Property Name="CategoriesSubCategories" />
+      <Property Name="CategoryRoles" />
+      <Property Name="Products" />
+      <Property Name="ProductSubCategories" />
+      <Property Name="Reviews" />
+      <Property Name="SubCategories" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Identity.IdentityRole">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Microsoft.EntityFrameworkCore.DbSet&lt;TEntity&gt;">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="DAL.Repositories.CategoryRepository">
+    <Position X="21.25" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\CategoryRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.CategoryRolesRepository">
+    <Position X="16.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\CategoryRolesRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.CatSubCategoryRepository">
+    <Position X="20.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\CatSubCategoryRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.EFUnitOfWork">
+    <Position X="11.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAIWAAABCQgIAAAAAQBAAAABgAEAIAAAAAAICQAAQ=</HashCode>
+      <FileName>Repositories\EFUnitOfWork.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="categoryRepository" />
+      <Field Name="categoryRolesRepository" />
+      <Field Name="catSubCategoryRepository" />
+      <Field Name="db" />
+      <Field Name="productRepository" />
+      <Field Name="productSubCategoriesRepository" />
+      <Field Name="reviewRepository" />
+      <Field Name="subCategoryRepository" />
+      <Field Name="userLikesRepository" />
+      <Field Name="userRepository" />
+      <Property Name="Categories" />
+      <Property Name="CategoriesSubCategories" />
+      <Property Name="CategoryRoles" />
+      <Property Name="Products" />
+      <Property Name="ProductSubCategories" />
+      <Property Name="Reviews" />
+      <Property Name="SubCategories" />
+      <Property Name="UserLikes" />
+      <Property Name="Users" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.ProductRepository">
+    <Position X="18.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\ProductRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.ProductSubCategoriesRepository">
+    <Position X="20.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\ProductSubCategoriesRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.ReviewRepository">
+    <Position X="20.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\ReviewRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.SubCategoryRepository">
+    <Position X="18.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\SubCategoryRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.UserLikesRepository">
+    <Position X="4.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Repositories\UserLikesRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.Repositories.UserRepository">
+    <Position X="24" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQAEAAABAAQCABAAAAAAAAAAAEIAFCACgAAACAAAAA=</HashCode>
+      <FileName>Repositories\UserRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="db" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="DAL.Interfaces.IRepository&lt;T&gt;">
+    <Position X="9.75" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAABAAAAAAAAAAAEIAEAAAgAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DAL.Interfaces.IUnitOfWork">
+    <Position X="13.75" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAAGAAABCAAAAAAAAQAAAAAAgAEAAAAAAAAAAQAAQ=</HashCode>
+      <FileName>Interfaces\IUnitOfWork.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DAL.Interfaces.IUserRepository&lt;T, S&gt;">
+    <Position X="5.5" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>QAQAEAAABAAACABAAAAAAAAAAAEIAFCACgAAACAAAAA=</HashCode>
+      <FileName>Interfaces\IUserRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

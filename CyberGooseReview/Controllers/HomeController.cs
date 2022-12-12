@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using CyberGooseReview.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace CyberGooseReview.Controllers
@@ -46,6 +47,31 @@ namespace CyberGooseReview.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult ChangeTheme()
+        {
+            var a = Request.Cookies["theme"];
+            if (Request.Cookies["theme"] == null)
+            {
+                Response.Cookies.Append("theme", "dark");
+            }
+            else
+            {
+                if (Request.Cookies["theme"] == "dark")
+                {
+                    Response.Cookies.Append("theme", "light");
+                }
+                else if (Request.Cookies["theme"] == "light")
+                {
+                    Response.Cookies.Append("theme", "dark");
+                }
+            }
+            string returnUrl = HttpContext.Request.Query["returnUrl"];
+            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction("Index", "Home");
         }
     }
 }

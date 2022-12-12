@@ -4,21 +4,32 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Cyber Goose Review Present</h1>
 </div>
-@foreach (var product in Model)
+@for (int i = 0; i < 5; i++)
 {
-    <div class="row g-0 bg-light position-relative">
-        <div class="col-md-3 mb-md-0 p-md-4">
-            <img src="data:image/*;base64,@(Convert.ToBase64String(product.ProductPicture))" style="width:200px;height:200px;" class="figure-img img-fluid rounded" alt="...">
+    @foreach (var product in Model)
+    {
+        <div class="row g-0 border border-secondary border-3 position-relative">
+            <div class="col-md-3 mb-md-0 p-md-4">
+                <img src="data:image/*;base64,@(Convert.ToBase64String(product.ProductPicture))" style="width:200px;height:200px;" class="figure-img img-fluid rounded" alt="...">
+            </div>
+            <div class="col-md-6 p-4 ps-md-0">
+                <h5 class="mt-0">@product.Name</h5>
+                <p>
+                    <b> User Rating:</b> @product.UserRating / 100
+                </p>
+                <p>
+                    <b>Critic Rating:</b> @product.CriticRating / 100
+                </p>
+                <p>
+                    <b>Common Rating:</b> @product.CommonRating / 100
+                </p>
+                <p>
+                    <div class="text-truncate-container">@product.Description</div>
+                </p>
+                <a class="stretched-link" asp-action="Product" asp-controller="Product" asp-route-id="@product.Id">More details...</a>
+            </div>
         </div>
-        <div class="col-md-6 p-4 ps-md-0">
-            <h5 class="mt-0">@product.Name</h5>
-            <p>
-                <div class="text-truncate-container">@product.Description</div>
-            </p>
-            <a class="stretched-link" asp-action="Product" asp-controller="Product" asp-route-id="@product.Id">More details...</a>
-        </div>
-    </div>
+    }
 }
-

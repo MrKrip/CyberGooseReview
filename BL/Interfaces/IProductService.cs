@@ -31,5 +31,6 @@ namespace BLL.Interfaces
         public Task AddRolesToCat(int categoryId, List<RoleDTO> roles);
         public bool IsProductHasSubCat(int productId, int subCatId);
         public void AddSubCategoriesToProduct(int productId, List<SubCatCheckDTO> categories);
+        public void UpdateRating(int categoryId);
     }
 }

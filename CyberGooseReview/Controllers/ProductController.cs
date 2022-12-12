@@ -4,6 +4,7 @@ using BLL.Interfaces;
 using CyberGooseReview.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CyberGooseReview.Controllers
 {
@@ -476,7 +477,56 @@ namespace CyberGooseReview.Controllers
                 }).ToList(),
                 YouTubeLink = p.YouTubeLink
             };
-            return View(ProductModel);
+            ItemWithReviewModel<ProductModel> model = new ItemWithReviewModel<ProductModel>()
+            {
+                Item = ProductModel,
+                Reviews = _reviewService.GetAllReviewsToProduct(ProductModel.Id).Reverse().Select(r => new ReviewModel()
+                {
+                    CreationDate = r.CreationDate,
+                    Details = r.ReviewDetails,
+                    DisLikes = r.DisLikes,
+                    Likes = r.Likes,
+                    userData = new UserDataModel(r.UserId, _userService, true) { Roles = _userService.CriticRoles(r.UserId, ProductModel.CategoryId).Result },
+                    ProductId = ProductModel.Id,
+                    ProductName = ProductModel.Name,
+                    Rating = r.Rating,
+                }),
+                UserReview = _reviewService.FindUserReviews(r => r.UserId == _userService.GetCurrentUser(User).Id && r.ProductId == ProductModel.Id).Select(r => new UserReviewModel()
+                {
+                    ProductId = r.ProductId,
+                    Rating = r.Rating,
+                    ReviewDetails = r.ReviewDetails,
+                    UserId = r.UserId
+                }).FirstOrDefault()
+            };
+            return View(model);
+        }
+
+        public IActionResult Reviews()
+        {
+            return View();
+        }
+
+        public IActionResult Category()
+        {
+            var Products = _productService.GetAllProducts().Where(p => p.CategoryId == 1).Select(p => new ProductModel()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Id = p.Id,
+                UserRating = p.UserRating,
+                Country = p.Country,
+                CommonRating = p.CommonRating,
+                CriticRating = p.CriticRating,
+                Year = p.Year
+            });
+            return View(Products);
+        }
+
+        public IActionResult Random()
+        {
+            return View();
         }
     }
 }

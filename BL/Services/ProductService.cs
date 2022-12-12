@@ -200,9 +200,24 @@ namespace BLL.Services
 
         public IEnumerable<ProductDTO> GetAllProductsByCategory(int category)
         {
-            var config = new MapperConfiguration(cfg => { cfg.CreateMap<Product, ProductDTO>(); cfg.CreateMap<SubCategory, SubCategoryDTO>(); });
+            var config = new MapperConfiguration(cfg => { cfg.CreateMap<Category, CategoryDTO>(); cfg.CreateMap<SubCategory, SubCategoryDTO>(); });
             var mapper = new Mapper(config);
-            return DataBase.Products.Find(c => c.CategoryId == category).Select(p => mapper.Map<ProductDTO>(p));
+            return DataBase.Products.Find(c => c.CategoryId == category).Select(p => new ProductDTO()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                YouTubeLink = p.YouTubeLink,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                Category = mapper.Map<CategoryDTO>(p.Category),
+                CommonRating = p.CommonRating,
+                Country = p.Country,
+                CriticRating = p.CriticRating,
+                ProductPicture = p.ProductPicture,
+                UserRating = p.UserRating,
+                Year = p.Year,
+                SubCategories = DataBase.ProductSubCategories.Find(psc => psc.ProductId == p.Id).Select(psc => new SubCategoryDTO() { Id = psc.Id, Name = DataBase.SubCategories.Get(psc.SubCategoryId).Name }).ToList()
+            });
         }
 
         public IEnumerable<SubCategoryDTO> GetAllSubCategories()
@@ -374,6 +389,11 @@ namespace BLL.Services
                     }
                 }
             }
+        }
+
+        public void UpdateRating(int categoryId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

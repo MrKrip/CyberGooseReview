@@ -167,5 +167,19 @@ namespace BLL.Services
         {
             return await DataBase.Users.Delete(await _userManager.GetUserAsync(user), _userManager);
         }
+
+        public async Task<IEnumerable<string>> CriticRoles(string UserId, int CatId)
+        {
+            List<string> roles = new List<string>();
+            var CatRoles = DataBase.CategoryRoles.Find(cr => cr.CategoryId == CatId);
+            foreach (var role in CatRoles)
+            {
+                if (await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(UserId), (await _roleManager.FindByIdAsync(role.RoleID)).Name))
+                {
+                    roles.Add((await _roleManager.FindByIdAsync(role.RoleID)).Name);
+                }
+            }
+            return roles;
+        }
     }
 }

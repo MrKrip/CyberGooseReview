@@ -1,4 +1,6 @@
 ﻿using BLL.Interfaces;
+using BLL.Services;
+using DAL.Entity;
 
 namespace CyberGooseReview.Models
 {
@@ -11,18 +13,13 @@ namespace CyberGooseReview.Models
         public int ReviewCount { get; set; }
         public DateTime? RegistationDate { get; set; }
         public byte[] ProfilePicture { get; set; } = null!;
-        public UserDataModel(string id, IUserService userService, bool CriticCheck = false)
+        public UserDataModel(string id, IUserService userService)
         {
             var user = userService.GetUserById(id);
             Id = user.Id;
             UserNick = user.UserNick;
             Email = user.Email;
             ProfilePicture = user.ProfilePicture;
-            if (!CriticCheck)
-            {
-                Roles = userService.GetUserRoles(id).Result;
-                RegistationDate = user.RegistationDate;
-            }
         }
     }
 }

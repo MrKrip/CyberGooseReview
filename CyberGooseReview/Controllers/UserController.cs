@@ -162,24 +162,36 @@ namespace CyberGooseReview.Controllers
         [HttpPost]
         public IActionResult NewRewiew(int Rating, string Review, int ProdId)
         {
-
-            return View();
+            _reviewService.CreateReview(new ReviewDTO() { ProductId = ProdId, Rating = Rating, ReviewDetails = Review, UserId = _userService.GetCurrentUser(User).Id, User = _userService.GetCurrentUser(User) });
+            return RedirectToAction("Product", "Product", new { id = ProdId });
         }
 
         [Authorize]
         [HttpPost]
         public IActionResult EditRewiew(int Rating, string Review, int ProdId)
         {
-
-            return View();
+            var user = _userService.GetCurrentUser(User);
+            var review = _reviewService.FindUserReviews(r => r.ProductId == ProdId && r.UserId == user.Id).FirstOrDefault();
+            if (review != null)
+            {
+                review.Rating = Rating;
+                review.ReviewDetails = Review;
+                _reviewService.DeleteReview(review.Id);
+                _reviewService.CreateReview(review);
+            }
+            return RedirectToAction("Product", "Product", new { id = ProdId });
         }
 
         [Authorize]
-        [HttpPost]
-        public IActionResult DeleteRewiew(int Rating, string Review, int ProdId)
+        public IActionResult DeleteRewiew(int ProdId)
         {
-
-            return View();
+            var user = _userService.GetCurrentUser(User);
+            var review = _reviewService.FindUserReviews(r => r.ProductId == ProdId && r.UserId == user.Id);
+            if (review != null)
+            {
+                _reviewService.DeleteReview(review.FirstOrDefault().Id);
+            }
+            return RedirectToAction("Product", "Product", new { id = ProdId });
         }
 
         public async Task<int> Like(int id)

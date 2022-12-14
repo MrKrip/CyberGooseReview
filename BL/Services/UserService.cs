@@ -172,11 +172,13 @@ namespace BLL.Services
         {
             List<string> roles = new List<string>();
             var CatRoles = DataBase.CategoryRoles.Find(cr => cr.CategoryId == CatId);
+            var user = await _userManager.FindByIdAsync(UserId);
             foreach (var role in CatRoles)
             {
-                if (await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(UserId), (await _roleManager.FindByIdAsync(role.RoleID)).Name))
+                var roleName = (await _roleManager.FindByIdAsync(role.RoleID)).Name;
+                if (await _userManager.IsInRoleAsync(user, roleName))
                 {
-                    roles.Add((await _roleManager.FindByIdAsync(role.RoleID)).Name);
+                    roles.Add(roleName);
                 }
             }
             return roles;

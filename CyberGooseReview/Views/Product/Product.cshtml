@@ -75,23 +75,24 @@
     @if (User.Identity.IsAuthenticated)
     {
 
-        @if (Model.UserReview != null)
+        @if (Model.UserReview !=null)
         {
             <div class="bg-light rounded-3">
-                <form method="post" asp-action="UpdateRewiew" asp-controller="User" asp-route-ProdId="@Model.Item.Id">
+                <form method="post" asp-action="EditRewiew" asp-controller="User" asp-route-ProdId="@Model.Item.Id">
                     <h1>Write your review</h1>
                     <div class="btn-group">
                         @for (int i = 1; i <= 10; i++)
                         {
-                            <input asp-for="@Model.UserReview.Rating" type="radio" class="btn-check" id="@i" value="@i">
+                            <input name="Rating" type="radio" class="btn-check" id="@i" value="@i">
                             <label class="btn btn-lg btn-outline-primary" for="@i">@i</label>
                         }
                     </div>
                     <br />
-                    <textarea asp-for="@Model.UserReview.ReviewDetails" class="form-control" rows="10"></textarea>
+                    <textarea name="Review" class="form-control" rows="10">@Model.UserReview.ReviewDetails</textarea>
                     <br />
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn-primary btn-lg">Create review</button>
+                        <button type="submit" class="btn-primary btn-lg">Edit review</button>
+                        <a asp-action="DeleteRewiew" asp-controller="User" asp-route-ProdId="@Model.UserReview.ProductId" class="btn btn-danger btn-lg">Delete review</a>
                     </div>
                 </form>
             </div>
@@ -104,12 +105,12 @@
                     <div class="btn-group">
                         @for (int i = 1; i <= 10; i++)
                         {
-                            <input asp-for="@Model.UserReview.Rating" type="radio" class="btn-check" id="@i" value="@i">
+                            <input name="Rating" type="radio" class="btn-check" id="@i" value="@i">
                             <label class="btn btn-lg btn-outline-primary" for="@i">@i</label>
                         }
                     </div>
                     <br />
-                    <textarea asp-for="@Model.UserReview.ReviewDetails" class="form-control" rows="10"></textarea>
+                    <textarea name="Review" class="form-control" rows="10"></textarea>
                     <br />
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="submit" class="btn-primary btn-lg">Create review</button>
@@ -124,7 +125,7 @@
     {
         <div class="border border-2 rounded-3">
             <img src="data:image/*;base64,@(Convert.ToBase64String(review.userData.ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
-            <a class="text-decoration-none" asp-action="Profile" asp-controller="User" asp-route-id="@review.userData.Id">User @review.userData.UserNick </a>: @string.Join(" , ", review.userData.Roles.ToString())
+            <a class="text-decoration-none" asp-action="Profile" asp-controller="User" asp-route-id="@review.userData.Id">@review.userData.UserNick </a>: @string.Join(" , ", review.userData.Roles.ToList())
             <div><label class="btn btn-lg btn-secondary">@review.Rating/10</label></div>
 
             <div class="border border-3" style="min-height:200px;">

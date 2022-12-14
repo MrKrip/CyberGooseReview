@@ -477,27 +477,33 @@ namespace CyberGooseReview.Controllers
                 }).ToList(),
                 YouTubeLink = p.YouTubeLink
             };
+            var reviews = _reviewService.GetAllReviewsToProduct(ProductModel.Id).Reverse().Take(15).ToList().Select(r => new ReviewModel()
+            {
+                CreationDate = r.CreationDate,
+                Details = r.ReviewDetails,
+                DisLikes = r.DisLikes,
+                Likes = r.Likes,
+                userData = new UserDataModel(r.UserId, _userService),
+                ProductId = ProductModel.Id,
+                ProductName = ProductModel.Name,
+                Rating = r.Rating,
+            }).ToList();
+            for(int i=0;i<reviews.Count;i++)
+            {
+                reviews[i].userData.Roles = _userService.CriticRoles(reviews[i].userData.Id,ProductModel.CategoryId).Result;
+            }
+            var userReview = _reviewService.FindUserReviews(r => r.UserId == _userService.GetCurrentUser(User).Id && r.ProductId == ProductModel.Id).Select(r => new UserReviewModel()
+            {
+                ProductId = r.ProductId,
+                Rating = r.Rating,
+                ReviewDetails = r.ReviewDetails,
+                UserId = r.UserId
+            }).FirstOrDefault();
             ItemWithReviewModel<ProductModel> model = new ItemWithReviewModel<ProductModel>()
             {
                 Item = ProductModel,
-                Reviews = _reviewService.GetAllReviewsToProduct(ProductModel.Id).Reverse().Select(r => new ReviewModel()
-                {
-                    CreationDate = r.CreationDate,
-                    Details = r.ReviewDetails,
-                    DisLikes = r.DisLikes,
-                    Likes = r.Likes,
-                    userData = new UserDataModel(r.UserId, _userService, true) { Roles = _userService.CriticRoles(r.UserId, ProductModel.CategoryId).Result },
-                    ProductId = ProductModel.Id,
-                    ProductName = ProductModel.Name,
-                    Rating = r.Rating,
-                }),
-                UserReview = _reviewService.FindUserReviews(r => r.UserId == _userService.GetCurrentUser(User).Id && r.ProductId == ProductModel.Id).Select(r => new UserReviewModel()
-                {
-                    ProductId = r.ProductId,
-                    Rating = r.Rating,
-                    ReviewDetails = r.ReviewDetails,
-                    UserId = r.UserId
-                }).FirstOrDefault()
+                Reviews = reviews,
+                UserReview = userReview
             };
             return View(model);
         }

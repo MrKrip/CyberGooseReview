@@ -27,7 +27,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Review> Find(Func<Review, bool> predicate)
         {
-            return db.Reviews.Include(u => u.User).Include(p => p.Product).Where(predicate).ToList();
+            return db.Reviews.Include(p => p.Product).Where(predicate).ToList();
         }
 
         public Review Get(int id)
@@ -37,7 +37,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Review> GetAll()
         {
-            return db.Reviews.Include(u => u.User).Include(p => p.Product);
+            return db.Reviews.Include(p => p.Product);
         }
 
         public void Update(Review item)

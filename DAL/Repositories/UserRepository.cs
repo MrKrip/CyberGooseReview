@@ -77,7 +77,7 @@ namespace DAL.Repositories
         public UserData Get(string id)
         {
             var u = db.Users.Find(id);
-            return new UserData { Id = u.Id, UserName = u.UserName };
+            return new UserData { Id = u.Id, UserName = u.UserName, Email=u.Email, ProfilePicture=u.ProfilePicture, UserNick=u.UserNick, RegistationDate=u.RegistationDate };
         }
 
         public IEnumerable<UserData> GetAll()

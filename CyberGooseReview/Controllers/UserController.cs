@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.Interfaces;
 using CyberGooseReview.Models;
+using DAL.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace CyberGooseReview.Controllers
         private IProductService _productService;
         private IReviewService _reviewService;
         private IUserService _userService;
+        private int pageSize = 10;
 
         public UserController(ILogger<HomeController> logger, IReviewService reviewService, IUserService userService, IProductService productService)
         {
@@ -86,7 +88,26 @@ namespace CyberGooseReview.Controllers
 
         public IActionResult Profile(string id)
         {
-            return View();
+            UserDataModel user = new UserDataModel(id, _userService);
+            user.Roles = _userService.GetUserRoles(id).Result;
+            user.ReviewCount = _reviewService.GetAllUserReview(id).Count();
+            var reviews = _reviewService.GetAllUserReview(id).Reverse().Take(15).ToList().Select(r => new ReviewModel()
+            {
+                CreationDate = r.CreationDate,
+                Details = r.ReviewDetails,
+                DisLikes = r.DisLikes,
+                Likes = r.Likes,
+                userData = user,
+                ProductId = r.ProductId,
+                ProductName = _productService.GetProduct(r.ProductId).Name,
+                Rating = r.Rating
+            }).ToList();
+            ItemWithReviewModel<UserDataModel> model = new ItemWithReviewModel<UserDataModel>()
+            {
+                Item = user,
+                Reviews = reviews
+            };
+            return View(model);
         }
 
         [Authorize]
@@ -202,6 +223,27 @@ namespace CyberGooseReview.Controllers
         public async Task<int> DisLike(int id)
         {
             return 0;
+        }
+
+        public IActionResult Reviews(string UserId, int page = 1)
+        {
+            ViewBag.UserId = UserId;
+            var reviews = _reviewService.GetAllUserReview(UserId).Reverse().ToList().Select(r => new ReviewModel()
+            {
+                CreationDate = r.CreationDate,
+                Details = r.ReviewDetails,
+                DisLikes = r.DisLikes,
+                Likes = r.Likes,
+                userData = new UserDataModel(UserId, _userService),
+                ProductId = r.ProductId,
+                ProductName = _productService.GetProduct(r.ProductId).Name,
+                Rating = r.Rating
+            }).ToList();
+            var count = reviews.Count;
+            reviews = reviews.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageModel pageModel = new PageModel(count, page, pageSize);
+            ItemsPageModel<ReviewModel> model = new ItemsPageModel<ReviewModel>(reviews, pageModel);
+            return View(model);
         }
     }
 }

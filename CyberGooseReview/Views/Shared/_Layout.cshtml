@@ -58,7 +58,7 @@
                             <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
                                 @foreach (var prod in _productService.GetCategories())
                                 {
-                                    <li><a class="dropdown-item" asp-action="Category" asp-controller="Product" asp-route-CatdId="@prod.Id">@prod.Name</a></li>
+                                    <li><a class="dropdown-item" asp-action="Category" asp-controller="Product" asp-route-CatId="@prod.Id">@prod.Name</a></li>
                                 }
                             </ul>
                         </li>

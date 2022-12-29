@@ -1,36 +1,47 @@
 ﻿@using BLL.Interfaces
 @inject IUserService userService
+@model ItemsPageModel<ReviewModel>
 
 <section class="w-100 p-4 justify-content-center">
     <div class="row justify-content-center">
         <div class="col-md-4 text-center">
-            <button type="button" class="btn btn-primary">All Reviews</button>
+            <a asp-action="Reviews" asp-controller="Product" asp-route-Type="All" asp-route-ProductId="@ViewBag.ProdId" class="btn btn-primary">All Reviews</a>
         </div>
         <div class="col-md-4 text-center">
-            <button type="button" class="btn btn-primary">Critic Reviews</button>
+            <a asp-action="Reviews" asp-controller="Product" asp-route-Type="Critic" asp-route-ProductId="@ViewBag.ProdId" class="btn btn-primary">Critic Reviews</a>
         </div>
         <div class="col-md-4 text-center">
-            <button type="button" class="btn btn-primary">Users Reviews</button>
+            <a asp-action="Reviews" asp-controller="Product" asp-route-Type="Users" asp-route-ProductId="@ViewBag.ProdId" class="btn btn-primary">Users Reviews</a>
         </div>
     </div>
 </section>
-@for (int i = 0; i < 5; i++)
+@foreach(var review in Model.Items)
 {
-    <div class="border border-2 rounded-3">
-        <img src="data:image/*;base64,@(Convert.ToBase64String(userService.GetCurrentUser(User).ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
-        <a class="text-decoration-none">User @i </a>: FilmCritic
-        <div><label class="btn btn-lg btn-secondary" for="@i">10/10</label></div>
+     <div class="border border-2 rounded-3">
+            <img src="data:image/*;base64,@(Convert.ToBase64String(review.userData.ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
+            <a class="text-decoration-none" asp-action="Profile" asp-controller="User" asp-route-id="@review.userData.Id">@review.userData.UserNick </a>: @string.Join(" , ", review.userData.Roles.ToList())
+            <div><label class="btn btn-lg btn-secondary">@review.Rating/10</label></div>
 
-        <div class="border border-3" style="min-height:200px;">
-            Pellentesque faucibus accumsan auctor. Maecenas porttitor, sem eu finibus auctor, purus ex maximus orci, eu gravida nisl turpis sed magna. Quisque iaculis elit justo, placerat porta nulla dapibus eget. Nam suscipit risus quis magna maximus vehicula. Aenean interdum risus nec posuere imperdiet. Mauris non nisi quam. Suspendisse potenti. Nullam suscipit dictum velit, fermentum porttitor est maximus vel. Nunc imperdiet dignissim fermentum. Nulla vehicula ex at lacus porta sollicitudin id eget felis. In sit amet nulla nec nisl venenatis rhoncus et ut sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque finibus urna non luctus rhoncus.
-            Ut quam lacus, iaculis eu diam eget, mattis convallis nulla. Suspendisse vestibulum pretium odio, sit amet varius sem dapibus a. Phasellus sit amet magna sed nibh convallis ultrices nec id ipsum. Vivamus ut vehicula orci. Integer condimentum tellus sed enim hendrerit placerat. Nam vel congue magna, in auctor sapien. Phasellus elementum lectus mi, at mollis massa sodales at. Donec mollis, mi et vulputate pharetra, leo felis porttitor eros, sit amet euismod ligula felis eu felis. Nullam efficitur elementum dictum. Vivamus est neque, vehicula vel ornare non, finibus nec nunc.
-        </div>
+            <div class="border border-3" style="min-height:200px;">
+                @review.Details
+            </div>
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit" class="btn-primary me-2">Like</button>
-            <span class="text-success">0</span>
-            <span class="text-danger">0</span>
-            <button type="submit" class="btn-danger">Dislike</button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn-primary me-2">Like</button>
+                <span class="text-success">@review.Likes</span>
+                <span class="text-danger">@review.DisLikes</span>
+                <button type="submit" class="btn-danger">Dislike</button>
+            </div>
         </div>
-    </div>
 }
+
+<p>
+    @if (Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Reviews" asp-route-ProductId="@ViewBag.ProdId" asp-route-page="@(Model.PageModel.PageNumber-1)" asp-route-Type="@ViewBag.Type">Previous Page</a>
+    }
+    @if (Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Reviews" asp-route-ProductId="@ViewBag.ProdId" asp-route-page="@(Model.PageModel.PageNumber+1)" asp-route-Type="@ViewBag.Type">Next Page</a>
+    }
+</p>

@@ -1,0 +1,36 @@
+﻿@using BLL.Interfaces
+@inject IUserService userService
+@model ItemsPageModel<ReviewModel>
+
+
+@foreach (var review in Model.Items)
+{
+    <div class="border border-2 rounded-3">
+        <img src="data:image/*;base64,@(Convert.ToBase64String(review.userData.ProfilePicture))" alt="CG" width="32" height="32" class="rounded-circle">
+        <a class="text-decoration-none" asp-action="Profile" asp-controller="User" asp-route-id="@review.userData.Id">@review.userData.UserNick </a>:
+        <p>Review for : <a asp-action="Product" asp-controller="Product" asp-route-Id="@review.ProductId" class="text-decoration-none">@review.ProductName</a></p>
+        <div><label class="btn btn-lg btn-secondary">@review.Rating/10</label></div>
+
+        <div class="border border-3" style="min-height:200px;">
+            @review.Details
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="submit" class="btn-primary me-2">Like</button>
+            <span class="text-success">@review.Likes</span>
+            <span class="text-danger">@review.DisLikes</span>
+            <button type="submit" class="btn-danger">Dislike</button>
+        </div>
+    </div>
+}
+
+<p>
+    @if (Model.PageModel.HasPreviousPage)
+    {
+        <a class="btn btn-primary" asp-controller="User" asp-action="Reviews" asp-route-UserId="@Model.Items.First().userData.Id" asp-route-page="@(Model.PageModel.PageNumber-1)">Previous Page</a>
+    }
+    @if (Model.PageModel.HasNextPage)
+    {
+        <a class="btn btn-primary" asp-controller="User" asp-action="Reviews" asp-route-UserId="@Model.Items.First().userData.Id" asp-route-page="@(Model.PageModel.PageNumber+1)" >Next Page</a>
+    }
+</p>

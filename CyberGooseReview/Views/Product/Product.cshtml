@@ -75,7 +75,7 @@
     @if (User.Identity.IsAuthenticated)
     {
 
-        @if (Model.UserReview !=null)
+        @if (Model.UserReview != null)
         {
             <div class="bg-light rounded-3">
                 <form method="post" asp-action="EditRewiew" asp-controller="User" asp-route-ProdId="@Model.Item.Id">
@@ -83,7 +83,14 @@
                     <div class="btn-group">
                         @for (int i = 1; i <= 10; i++)
                         {
-                            <input name="Rating" type="radio" class="btn-check" id="@i" value="@i">
+                            if (i == Model.UserReview.Rating)
+                            {
+                                <input name="Rating" type="radio" class="btn-check" id="@i" value="@i" checked>
+                            }
+                            else
+                            {
+                                <input name="Rating" type="radio" class="btn-check" id="@i" value="@i">
+                            }
                             <label class="btn btn-lg btn-outline-primary" for="@i">@i</label>
                         }
                     </div>

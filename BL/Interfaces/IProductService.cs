@@ -32,5 +32,6 @@ namespace BLL.Interfaces
         public bool IsProductHasSubCat(int productId, int subCatId);
         public void AddSubCategoriesToProduct(int productId, List<SubCatCheckDTO> categories);
         public void UpdateRating(int categoryId);
+        public IEnumerable<SubCategoryDTO> SubCatForProd(int categoryId, int prodId);
     }
 }

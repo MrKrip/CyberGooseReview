@@ -395,5 +395,12 @@ namespace BLL.Services
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<SubCategoryDTO> SubCatForProd(int categoryId,int prodId)
+        {
+            var subCat = GetAllSubCatForCat(categoryId).ToList();
+            subCat = subCat.Where(sc => DataBase.ProductSubCategories.Find(psc=>psc.ProductId==prodId && psc.SubCategoryId==sc.Id).Any()).ToList();
+            return subCat;
+        }
     }
 }

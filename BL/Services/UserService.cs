@@ -67,6 +67,10 @@ namespace BLL.Services
         public async Task<bool> LogIn(UserDTO user)
         {
             var UserData = await _userManager.FindByEmailAsync(user.Email);
+            if (UserData == null)
+            {
+                return false;
+            }
             user.PasswordHash = AES_GCM.Encrypt(Make_MD5.GetHash(user.PasswordHash), _config, Convert.FromBase64String(UserData.Salt), Convert.FromBase64String(UserData.Tag));
             if (UserData.PasswordHash == user.PasswordHash)
             {

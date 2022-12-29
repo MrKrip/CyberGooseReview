@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.Interfaces;
 using CyberGooseReview.Models;
+using DAL.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -31,16 +32,16 @@ namespace CyberGooseReview.Controllers
             var mapper = new Mapper(config);
             if (SubCatName == null)
             {
-                var subCat = _productService.GetAllSubCategories().Select(sc => mapper.Map<SubCategoryModel>(sc));
+                var subCat = _productService.GetAllSubCategories().Select(sc => mapper.Map<SubCategoryModel>(sc)).Reverse();
                 var count = subCat.Count();
                 subCat = subCat.Skip((page - 1) * pageSize).Take(pageSize);
                 PageModel pageModel = new PageModel(count, page, pageSize);
-                ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat.Reverse(), pageModel);
+                ItemsPageModel<SubCategoryModel> model = new ItemsPageModel<SubCategoryModel>(subCat, pageModel);
                 return View(model);
             }
             else
             {
-                var subCat = _productService.FindSubCategories(sc => sc.Name.ToLower().Contains(SubCatName.ToLower())).Select(sc => mapper.Map<SubCategoryModel>(sc));
+                var subCat = _productService.FindSubCategories(sc => sc.Name.ToLower().Contains(SubCatName.ToLower())).Select(sc => mapper.Map<SubCategoryModel>(sc)).Reverse();
                 if (subCat.Any())
                 {
                     ViewBag.subCat = SubCatName;
@@ -53,7 +54,7 @@ namespace CyberGooseReview.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, $"Subcategory \"{SubCatName}\" does not exist");
-                    subCat = _productService.GetAllSubCategories().Select(sc => mapper.Map<SubCategoryModel>(sc));
+                    subCat = _productService.GetAllSubCategories().Select(sc => mapper.Map<SubCategoryModel>(sc)).Reverse();
                     var count = subCat.Count();
                     subCat = subCat.Skip((page - 1) * pageSize).Take(pageSize);
                     PageModel pageModel = new PageModel(count, page, pageSize);
@@ -470,14 +471,14 @@ namespace CyberGooseReview.Controllers
                 Year = p.Year,
                 CategoryId = p.CategoryId,
                 Category = mapper.Map<CategoryModel>(_productService.GetCategory(p.CategoryId)),
-                SubCategories = _productService.GetAllSubCatForCat(p.CategoryId).Select(sc => new SubCategoryModel()
+                SubCategories = _productService.SubCatForProd(p.CategoryId, p.Id).Select(sc => new SubCategoryModel()
                 {
                     Id = sc.Id,
                     Name = sc.Name
                 }).ToList(),
                 YouTubeLink = p.YouTubeLink
             };
-            var reviews = _reviewService.GetAllReviewsToProduct(ProductModel.Id).Reverse().Take(15).ToList().Select(r => new ReviewModel()
+            var reviews = _reviewService.GetAllReviewsToProduct(ProductModel.Id).Reverse().Take(10).ToList().Select(r => new ReviewModel()
             {
                 CreationDate = r.CreationDate,
                 Details = r.ReviewDetails,
@@ -486,19 +487,23 @@ namespace CyberGooseReview.Controllers
                 userData = new UserDataModel(r.UserId, _userService),
                 ProductId = ProductModel.Id,
                 ProductName = ProductModel.Name,
-                Rating = r.Rating,
+                Rating = r.Rating
             }).ToList();
-            for(int i=0;i<reviews.Count;i++)
+            for (int i = 0; i < reviews.Count; i++)
             {
-                reviews[i].userData.Roles = _userService.CriticRoles(reviews[i].userData.Id,ProductModel.CategoryId).Result;
+                reviews[i].userData.Roles = _userService.CriticRoles(reviews[i].userData.Id, ProductModel.CategoryId).Result;
             }
-            var userReview = _reviewService.FindUserReviews(r => r.UserId == _userService.GetCurrentUser(User).Id && r.ProductId == ProductModel.Id).Select(r => new UserReviewModel()
+            UserReviewModel userReview = new UserReviewModel();
+            if (_userService.GetCurrentUser(User) != null)
             {
-                ProductId = r.ProductId,
-                Rating = r.Rating,
-                ReviewDetails = r.ReviewDetails,
-                UserId = r.UserId
-            }).FirstOrDefault();
+                userReview = _reviewService.FindUserReviews(r => r.UserId == _userService.GetCurrentUser(User).Id && r.ProductId == ProductModel.Id).Select(r => new UserReviewModel()
+                {
+                    ProductId = r.ProductId,
+                    Rating = r.Rating,
+                    ReviewDetails = r.ReviewDetails,
+                    UserId = r.UserId
+                }).FirstOrDefault();
+            }
             ItemWithReviewModel<ProductModel> model = new ItemWithReviewModel<ProductModel>()
             {
                 Item = ProductModel,
@@ -508,14 +513,48 @@ namespace CyberGooseReview.Controllers
             return View(model);
         }
 
-        public IActionResult Reviews()
+        public IActionResult Reviews(int ProductId, int page = 1, string Type = "All")
         {
-            return View();
+            ViewBag.ProdId = ProductId;
+            ViewBag.Type = Type;
+            var reviews = _reviewService.GetAllReviewsToProduct(ProductId).Select(r => new ReviewModel()
+            {
+                ProductId = r.ProductId,
+                CreationDate = r.CreationDate,
+                Details = r.ReviewDetails,
+                DisLikes = r.DisLikes,
+                Likes = r.Likes,
+                ProductName = r.Product.Name,
+                Rating = r.Rating,
+                userData = new UserDataModel(r.User.Id, _userService)
+            }).Reverse().ToList();
+            for (int i = 0; i < reviews.Count; i++)
+            {
+                var CatId = _productService.GetProduct(ProductId).CategoryId;
+                reviews[i].userData.Roles = _userService.CriticRoles(reviews[i].userData.Id, CatId).Result;
+            }
+            if (Type == "Users")
+            {
+                reviews = reviews.Where(r => r.userData.Roles.ToList().Count == 0).ToList();
+            }
+            else if (Type == "Critic")
+            {
+                reviews = reviews.Where(r => r.userData.Roles.ToList().Count > 0).ToList();
+            }
+            var count = reviews.Count;
+            reviews = reviews.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageModel pageModel = new PageModel(count, page, pageSize);
+            ItemsPageModel<ReviewModel> model = new ItemsPageModel<ReviewModel>(reviews, pageModel);
+            return View(model);
         }
 
-        public IActionResult Category()
+        [HttpGet]
+        public IActionResult Category(int CatId, FilterModel? filter, int page = 1)
         {
-            var Products = _productService.GetAllProducts().Where(p => p.CategoryId == 1).Select(p => new ProductModel()
+            ViewBag.CatId = CatId;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CategoryDTO, CategoryModel>());
+            var mapper = new Mapper(config);
+            var Products = _productService.GetAllProducts().Where(p => p.CategoryId == CatId).Select(p => new ProductModel()
             {
                 Name = p.Name,
                 Description = p.Description,
@@ -525,14 +564,159 @@ namespace CyberGooseReview.Controllers
                 Country = p.Country,
                 CommonRating = p.CommonRating,
                 CriticRating = p.CriticRating,
-                Year = p.Year
-            });
-            return View(Products);
+                Year = p.Year,
+                CategoryId = p.CategoryId,
+                Category = mapper.Map<CategoryModel>(_productService.GetCategory(p.CategoryId)),
+                SubCategories = _productService.SubCatForProd(p.CategoryId, p.Id).Select(sc => new SubCategoryModel()
+                {
+                    Id = sc.Id,
+                    Name = sc.Name
+                }).ToList()
+            }).ToList();
+            if (filter.SubCategory != null)
+            {
+                if (filter.SubCategory.Any())
+                {
+                    Products = Products.Where(p => p.SubCategories.Where(sc => sc.Id == 4).Any()).ToList();
+                }
+                var temp = filter.SubCategory;
+                filter.SubCategory = _productService.GetAllSubCatForCat(CatId).Select(sc => new CheckElementModel() { Id = sc.Id.ToString(), Name = sc.Name, Selected = temp.Where(t => t.Id == sc.Id.ToString()).Any() });
+            }
+            else
+            {
+                filter.SubCategory = _productService.GetAllSubCatForCat(CatId).Select(sc => new CheckElementModel() { Id = sc.Id.ToString(), Name = sc.Name, Selected = false });
+            }
+            if (filter.Country != null)
+            {
+                if (filter.Country.Any())
+                {
+                    Products = Products.Where(p => filter.Country.Where(f => f.Name == p.Country).Any()).ToList();
+                }
+                var temp = filter.Country;
+                filter.Country = Products.Select(p => p.Country).Distinct().Select(p => new CheckElementModel() { Id = p, Name = p, Selected = temp.ToList().Where(t => t.Name == p).Any() });
+            }
+            else
+            {
+                filter.Country = Products.Select(p => p.Country).Distinct().Select(p => new CheckElementModel() { Id = p, Name = p, Selected = false });
+            }
+            if (filter.maxRating == 0)
+            {
+                filter.maxRating = 100;
+            }
+
+            if (filter.minRating > filter.maxRating)
+            {
+                var temp = filter.maxRating;
+                filter.maxRating = filter.minRating;
+                filter.minRating = temp;
+            }
+            Products = Products.Where(p => p.CommonRating >= filter.minRating && p.CommonRating <= filter.maxRating).ToList();
+
+            if (filter.maxYear == 0)
+            {
+                filter.maxYear = DateTime.Now.Year;
+            }
+
+            if (filter.minYear > filter.maxYear)
+            {
+                var temp = filter.maxYear;
+                filter.maxYear = filter.minYear;
+                filter.minYear = temp;
+            }
+            Products = Products.Where(p => p.Year >= filter.minYear && p.Year <= filter.maxYear).ToList();
+
+            ViewBag.Filter = filter;
+            var count = Products.Count();
+            Products = Products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageModel pageModel = new PageModel(count, page, pageSize);
+            FilterPageModel<ProductModel, FilterModel> model = new FilterPageModel<ProductModel, FilterModel>(Products, filter, pageModel);
+            return View(model);
         }
 
-        public IActionResult Random()
+        public IActionResult Random(FilterModel? filter)
         {
-            return View();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<CategoryDTO, CategoryModel>());
+            var mapper = new Mapper(config);
+            var Products = _productService.GetAllProducts().Select(p => new ProductModel()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                ProductPicture = p.ProductPicture,
+                Id = p.Id,
+                UserRating = p.UserRating,
+                Country = p.Country,
+                CommonRating = p.CommonRating,
+                CriticRating = p.CriticRating,
+                Year = p.Year,
+                CategoryId = p.CategoryId,
+                Category = mapper.Map<CategoryModel>(_productService.GetCategory(p.CategoryId)),
+                SubCategories = _productService.SubCatForProd(p.CategoryId, p.Id).Select(sc => new SubCategoryModel()
+                {
+                    Id = sc.Id,
+                    Name = sc.Name
+                }).ToList()
+            }).ToList();
+            if (filter.SubCategory != null)
+            {
+                if (filter.SubCategory.Any())
+                {
+                    Products = Products.Where(p => p.CategoryId == 1).ToList();
+                }
+                var temp = filter.SubCategory;
+                filter.SubCategory = _productService.GetCategories().Select(sc => new CheckElementModel() { Id = sc.Id.ToString(), Name = sc.Name, Selected = temp.Where(t => t.Id == sc.Id.ToString()).Any() });
+            }
+            else
+            {
+                filter.SubCategory = _productService.GetCategories().Select(sc => new CheckElementModel() { Id = sc.Id.ToString(), Name = sc.Name, Selected = false });
+            }
+            if (filter.Country != null)
+            {
+                if (filter.Country.Any())
+                {
+                    Products = Products.Where(p => p.Country == "USA").ToList();
+                }
+                var temp = filter.Country;
+                filter.Country = _productService.GetAllProducts().Select(p => p.Country).Distinct().Select(p => new CheckElementModel() { Id = p, Name = p, Selected = temp.ToList().Where(t => t.Name == p).Any() });
+            }
+            else
+            {
+                filter.Country = Products.Select(p => p.Country).Distinct().Select(p => new CheckElementModel() { Id = p, Name = p, Selected = false });
+            }
+            if (filter.maxRating == 0)
+            {
+                filter.maxRating = 100;
+            }
+
+            if (filter.minRating > filter.maxRating)
+            {
+                var temp = filter.maxRating;
+                filter.maxRating = filter.minRating;
+                filter.minRating = temp;
+            }
+            Products = Products.Where(p => p.CommonRating >= filter.minRating && p.CommonRating <= filter.maxRating).ToList();
+
+            if (filter.maxYear == 0)
+            {
+                filter.maxYear = DateTime.Now.Year;
+            }
+
+            if (filter.minYear > filter.maxYear)
+            {
+                var temp = filter.maxYear;
+                filter.maxYear = filter.minYear;
+                filter.minYear = temp;
+            }
+            Products = Products.Where(p => p.Year >= filter.minYear && p.Year <= filter.maxYear).ToList();
+            PageModel pageModel = new PageModel(0, 0, 0);
+            Random rnd = new Random();
+            List<ProductModel> product = new List<ProductModel>();
+            int index = rnd.Next(0, Products.Count());
+            if (Products.Count > 0)
+            {
+                product.Add(Products[index]);
+            }
+            FilterPageModel<ProductModel, FilterModel> model = new FilterPageModel<ProductModel, FilterModel>(product, filter, pageModel);
+            return View(model);
         }
     }
 }
